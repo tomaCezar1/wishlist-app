@@ -9,13 +9,11 @@ function Home() {
                 <title>Wishlist App</title>
                 <link rel="icon" href="../public/favicon.ico" />
             </Head>
-            {/* <div className="bg-img"> */}
             <main className="container">
                 <Navbar />
                 <Dashboard />
                 <footer></footer>
             </main>
-            {/* </div> */}
         </>
     );
 }
