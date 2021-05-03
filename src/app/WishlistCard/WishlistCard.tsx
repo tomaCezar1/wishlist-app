@@ -17,7 +17,7 @@ const useStyles = makeStyles({
         background: '#ffffff',
         alignSelf: 'center',
         '&:hover': {
-            boxShadow: '0 5px 10px rgb(0 0 0 / 25%)',
+            boxShadow: '0 3px 17px rgb(0 0 0 / 25%)',
             transform: 'scale(1.03)',
         },
     },
@@ -37,7 +37,6 @@ function Wishlistcard(): JSX.Element {
             <div className="button-container">
                 <button className="card-btn primary-btn">Add</button>
                 <button className="card-btn grey-btn">Edit</button>
-                {/* <button className="card-btn red-btn">Delete</button> */}
             </div>
             <i className="card-delete-btn">
                 <Close />
