@@ -23,15 +23,15 @@ const useStyles = makeStyles({
     },
 });
 
-function Wishlistcard(): JSX.Element {
+function Wishlistcard({ title, date }): JSX.Element {
     const classes = useStyles();
     return (
         <Card className={`${classes.root} card`}>
             <div className="card-top">
-                <h1>Someone&apos;s birthday</h1>
+                <h1>{title}</h1>
                 <div className="card-time">
                     <Time />
-                    <h2>2021/05/01, 12:30 PM</h2>
+                    <h2>{date}</h2>
                 </div>
             </div>
             <div className="button-container">
