@@ -1,0 +1,51 @@
+@import './constants.scss';
+@import '../app/Dashboard/Dashboard';
+@import '../app/Navbar/Navbar';
+@import '../app/Sidebar/Sidebar';
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    width: 100%;
+    min-height: 100vh;
+    font-family: $font;
+    padding: 24px 56px;
+    display: flex;
+    flex-direction: column;
+    background-color: $bgColor;
+}
+
+%flex-row-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+%flex-row-between {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+%flex-col-center {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+%flex-col-between {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}

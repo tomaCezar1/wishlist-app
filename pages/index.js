@@ -1,7 +1,6 @@
-import { Dashboard } from '@material-ui/icons';
 import Head from 'next/head';
 import Navbar from '../src/app/Navbar/NavBar';
-import Sidebar from '../src/app/Sidebar/Sidebar';
+import Dashboard from '../src/app/Dashboard/Dashboard';
 
 function Home() {
     return (
@@ -11,13 +10,8 @@ function Home() {
                 <link rel="icon" href="../public/favicon.ico" />
             </Head>
             <main className="container">
-                <nav className="navbar">
-                    <Navbar />
-                </nav>
-                {/* <section>
-                    <Sidebar />
-                    </section> */}
-                <section>{/* <Dashboard /> */}</section>
+                <Navbar />
+                <Dashboard />
                 <footer></footer>
             </main>
         </>
