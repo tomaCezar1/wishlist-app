@@ -1,8 +1,11 @@
 import Head from 'next/head';
+import { connect } from 'react-redux';
+
 import Navbar from '../src/app/Navbar/NavBar';
 import Dashboard from '../src/app/Dashboard/Dashboard';
+import Form from '../src/app/Form/Form';
 
-function Home({ data }) {
+function Home({ data, showForm }) {
     return (
         <>
             <Head>
@@ -12,13 +15,19 @@ function Home({ data }) {
             <main className="container">
                 <Navbar />
                 <Dashboard wishlists={data} />
+                {showForm ? <Form /> : null}
                 <footer></footer>
             </main>
         </>
     );
 }
+const mapStateToProps = (state) => {
+    return {
+        showForm: state.showForm,
+    };
+};
 
-export default Home;
+export default connect(mapStateToProps, null)(Home);
 
 export async function getServerSideProps() {
     const res = await fetch('http://localhost:8080/api/wishlists').catch((e) =>

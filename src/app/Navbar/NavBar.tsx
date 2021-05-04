@@ -1,16 +1,10 @@
-import { useState } from 'react';
+import { connect } from 'react-redux';
 
 import Settings from '@material-ui/icons/SettingsOutlined';
 import Notifications from '@material-ui/icons/NotificationsOutlined';
 import { Avatar } from '@material-ui/core';
 
-function NavBar(): JSX.Element {
-    const [showForm, setShowForm] = useState(false);
-
-    const toggleForm = () => {
-        setShowForm(true);
-    };
-
+function NavBar({ toggleForm }): JSX.Element {
     return (
         <nav className="navbar">
             <div className="main-heading">
@@ -34,4 +28,10 @@ function NavBar(): JSX.Element {
     );
 }
 
-export default NavBar;
+const mapDispatchToProps = (dispatch) => {
+    return {
+        toggleForm: () => dispatch({ type: 'SHOW_FORM' }),
+    };
+};
+
+export default connect(null, mapDispatchToProps)(NavBar);
