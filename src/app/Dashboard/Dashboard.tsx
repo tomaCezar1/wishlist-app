@@ -4,7 +4,14 @@ function Dashboard({ wishlists }): JSX.Element {
     return (
         <section className="dashboard-container">
             {wishlists.map((wishlist) => {
-                const date: string = wishlist.wishListDate.split('T')[0];
+                let date: string;
+
+                if (wishlist.wishListDate) {
+                    date = wishlist?.wishListDate.split('T')[0];
+                } else {
+                    date = 'No time specified';
+                }
+
                 return (
                     <Wishlistcard
                         key={wishlist.id}

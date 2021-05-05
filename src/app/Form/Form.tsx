@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { connect } from 'react-redux';
+import Router from 'next/router';
 
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -56,7 +57,7 @@ function Form({ toggleForm }): JSX.Element {
 
     const formVerification = () => {
         // Verify if title is completed
-        if (title === '' || null || undefined) {
+        if (!title) {
             setTitleError(true);
             return;
         } else {
@@ -64,7 +65,7 @@ function Form({ toggleForm }): JSX.Element {
         }
 
         // Verify wishlist type
-        if (type === 'None' || type === '' || null || undefined) {
+        if (type === 'None' || !type) {
             setTypeError(true);
             return;
         } else {
@@ -72,13 +73,15 @@ function Form({ toggleForm }): JSX.Element {
         }
 
         formRequest();
+        toggleForm();
+        Router.reload();
     };
 
     const formRequest = () => {
         const postData = {
-            title: title,
-            type: type,
-            description: description,
+            title,
+            type,
+            description,
             wishlistDate: date,
             privacy_type: privacy,
         };
