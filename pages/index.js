@@ -39,3 +39,5 @@ export async function getServerSideProps() {
         props: { data },
     };
 }
+
+// https://heroku-test-21.herokuapp.com/api/wishlists
