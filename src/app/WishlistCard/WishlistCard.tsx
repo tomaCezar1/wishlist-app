@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import Router from 'next/router';
 
 import Card from '@material-ui/core/Card';
@@ -22,7 +22,7 @@ const cardStyles = {
     transition: 'transform .3s ease-in-out, box-shadow .3s ease',
     background: '#ffffff',
     alignSelf: 'center',
-};
+} as React.CSSProperties;
 
 function Wishlistcard({ title, id, date }): JSX.Element {
     const [open, setOpen] = useState(false);
