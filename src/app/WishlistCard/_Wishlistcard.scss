@@ -1,3 +1,8 @@
+.card:hover {
+    box-shadow: 0 3px 17px rgb(0 0 0 / 25%);
+    transform: scale(1.03);
+}
+
 .card-top {
     background-color: $primary;
     width: 100%;
@@ -15,7 +20,6 @@
     h2 {
         font-size: 14px;
         font-weight: $light;
-        // align-self: flex-end;
         margin-left: 5px;
     }
 }
@@ -85,4 +89,23 @@
 .card:hover .card-delete-btn {
     opacity: 1;
     pointer-events: auto;
+}
+
+#cancel-btn {
+    &:hover {
+        background-color: $greyLight;
+        color: $lightBlue;
+    }
+}
+
+#continue-btn {
+    &:hover {
+        background-color: $primary;
+        color: $greyLight;
+    }
+}
+
+.dialog-btn {
+    transition: all 0.3s ease-in-out !important;
+    font-weight: $bold !important;
 }
