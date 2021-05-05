@@ -5,7 +5,6 @@ function Dashboard({ wishlists }): JSX.Element {
         <section className="dashboard-container">
             {wishlists.map((wishlist) => {
                 let date: string;
-
                 if (wishlist.wishListDate) {
                     date = wishlist?.wishListDate.split('T')[0];
                 } else {

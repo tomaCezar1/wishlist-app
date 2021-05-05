@@ -1,28 +1,14 @@
 import React, { useState } from 'react';
 import Router from 'next/router';
 
-import Card from '@material-ui/core/Card';
+import { url } from '../../utils/httpRequests';
+
 import Time from '@material-ui/icons/AccessTime';
 import Close from '@material-ui/icons/Close';
-
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogTitle from '@material-ui/core/DialogTitle';
-
-const cardStyles = {
-    position: 'relative',
-    borderRadius: 20,
-    width: 300,
-    height: '180px',
-    border: 'none',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    transition: 'transform .3s ease-in-out, box-shadow .3s ease',
-    background: '#ffffff',
-    alignSelf: 'center',
-} as React.CSSProperties;
 
 function Wishlistcard({ title, id, date }): JSX.Element {
     const [open, setOpen] = useState(false);
@@ -36,7 +22,7 @@ function Wishlistcard({ title, id, date }): JSX.Element {
     };
 
     const handleDeleteRequest = () => {
-        fetch(`http://localhost:8080/api/wishlists/${id}`, {
+        fetch(`${url}/wishlists/${id}`, {
             method: 'DELETE',
         })
             .then((res) => res.json())
@@ -51,7 +37,7 @@ function Wishlistcard({ title, id, date }): JSX.Element {
     };
 
     return (
-        <Card className="card" style={cardStyles}>
+        <div className="card">
             <div className="card-top">
                 <h1>{title}</h1>
                 <div className="card-time">
@@ -92,7 +78,7 @@ function Wishlistcard({ title, id, date }): JSX.Element {
                     </Button>
                 </DialogActions>
             </Dialog>
-        </Card>
+        </div>
     );
 }
 export default Wishlistcard;

@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import Navbar from '../src/app/Navbar/NavBar';
 import Dashboard from '../src/app/Dashboard/Dashboard';
 import Form from '../src/app/Form/Form';
+import { getWishlists } from '../src/utils/httpRequests';
 
 function Home({ data, showForm }) {
     return (
@@ -30,14 +31,10 @@ const mapStateToProps = (state) => {
 export default connect(mapStateToProps, null)(Home);
 
 export async function getServerSideProps() {
-    const res = await fetch('http://localhost:8080/api/wishlists').catch((e) =>
-        console.log('Error: ', e.message)
-    );
+    const res = await getWishlists().catch((e) => console.log('Error: ', e.message));
     const data = await res.json();
 
     return {
         props: { data },
     };
 }
-
-// https://heroku-test-21.herokuapp.com/api/wishlists
