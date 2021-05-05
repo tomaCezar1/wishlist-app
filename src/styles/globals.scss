@@ -3,6 +3,7 @@
 @import '../app/Navbar/Navbar';
 @import '../app/Sidebar/Sidebar';
 @import '../app/WishlistCard/Wishlistcard';
+@import '../app/Form/Form.scss';
 
 a {
     color: inherit;
@@ -27,6 +28,7 @@ button {
     display: flex;
     flex-direction: column;
     background-color: $bgColor;
+    position: relative;
 }
 
 %flex-row-center {
@@ -53,4 +55,8 @@ button {
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
+}
+
+.flex {
+    display: flex;
 }
