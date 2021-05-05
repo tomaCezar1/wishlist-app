@@ -6,19 +6,19 @@ module.exports = {
         ecmaVersion: 2021,
         sourceType: 'module',
         ecmaFeatures: {
-            jsx: true
-        }
+            jsx: true,
+        },
     },
     settings: {
         react: {
-            version: 'detect'
-        }
+            version: 'detect',
+        },
     },
     env: {
         browser: true,
         amd: true,
         node: true,
-        es6: true
+        es6: true,
     },
     extends: [
         'eslint:recommended',
@@ -28,7 +28,7 @@ module.exports = {
         'plugin:@typescript-eslint/eslint-recommended',
         'plugin:@typescript-eslint/recommended',
         'prettier',
-        'prettier/@typescript-eslint'
+        'prettier/@typescript-eslint',
     ],
     rules: {
         'prettier/prettier': ['error', { endOfLine: 'auto' }, { usePrettierrc: true }],
@@ -37,9 +37,10 @@ module.exports = {
             {
                 components: ['Link'],
                 specialLink: ['hrefLeft', 'hrefRight'],
-                aspects: ['invalidHref', 'preferButton']
-            }
+                aspects: ['invalidHref', 'preferButton'],
+            },
         ],
+        'jsx-a11y/click-events-have-key-events': false,
         'react/prop-types': 0,
         'react/display-name': 0,
         'react/react-in-jsx-scope': 0,
@@ -49,6 +50,6 @@ module.exports = {
         '@typescript-eslint/quotes': ['error', 'single'],
         '@typescript-eslint/no-unused-vars': ['error'],
         '@typescript-eslint/explicit-function-return-type': 0,
-        '@typescript-eslint/explicit-module-boundary-types': 'off'
-    }
+        '@typescript-eslint/explicit-module-boundary-types': 'off',
+    },
 };
