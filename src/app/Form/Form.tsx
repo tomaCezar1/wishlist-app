@@ -7,7 +7,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import { makeStyles } from '@material-ui/core/styles';
 import Close from '@material-ui/icons/Close';
 
-import { postRequest } from '../../utils/httpRequests';
+import { createWishlist } from '../../utils/httpRequests';
 
 function Form({ toggleForm }): JSX.Element {
     const todayDate = new Date();
@@ -16,11 +16,11 @@ function Form({ toggleForm }): JSX.Element {
     // State
     const [title, setTitle] = useState('');
     const [titleError, setTitleError] = useState(false);
-    const [type, setType] = useState('None');
+    const [eventType, setEventType] = useState('None');
     const [typeError, setTypeError] = useState(false);
     const [description, setDescription] = useState('');
-    const [date, setDate] = useState(formattedDate);
-    const [privacy, setPrivacy] = useState('Private');
+    const [wishlistDate, setWishlistDate] = useState(formattedDate);
+    const [privacyType, setPrivacyType] = useState('Private');
 
     // Event Handlers
     const handleTitleChange = (event) => {
@@ -28,23 +28,23 @@ function Form({ toggleForm }): JSX.Element {
     };
 
     const handleTypeChange = (event) => {
-        setType(event.target.value);
+        setEventType(event.target.value);
     };
 
     const handlePrivacyChange = (event) => {
-        setPrivacy(event.target.value);
+        setPrivacyType(event.target.value);
     };
 
     const handleDateChange = (event) => {
-        setDate(event.target.value);
+        setWishlistDate(event.target.value);
     };
 
     const handleDescriptionChange = (event) => {
         setDescription(event.target.value);
     };
 
-    const types = ['None', 'Birthday', 'Wedding', 'Other'];
-    const privacyTypes = ['Private', 'Not private'];
+    const wishlistOptions = ['None', 'Birthday', 'Wedding', 'Other'];
+    const privacyOptions = ['Private', 'Public'];
 
     const useStyles = makeStyles({
         input: {
@@ -65,7 +65,7 @@ function Form({ toggleForm }): JSX.Element {
         }
 
         // Verify wishlist type
-        if (type === 'None' || !type) {
+        if (eventType === 'None' || !eventType) {
             setTypeError(true);
             return;
         } else {
@@ -78,15 +78,19 @@ function Form({ toggleForm }): JSX.Element {
     };
 
     const formRequest = () => {
+        const privacyTypeUppercase = privacyType.toUpperCase();
+        const eventTypeUppercase = eventType.toUpperCase();
+        const formattedDateforRequest = wishlistDate.concat('T00:00:00');
+
         const postData = {
             title,
-            type,
+            eventType: eventTypeUppercase,
             description,
-            wishlistDate: date,
-            privacy_type: privacy,
+            wishListDate: formattedDateforRequest,
+            privacyType: privacyTypeUppercase,
         };
 
-        postRequest(postData).catch((e) => {
+        createWishlist(postData).catch((e) => {
             throw new Error(e);
         });
     };
@@ -111,12 +115,12 @@ function Form({ toggleForm }): JSX.Element {
                         select
                         required
                         error={typeError}
-                        value={type}
+                        value={eventType}
                         className={classes.input}
                         onChange={handleTypeChange}
                         helperText="Please select wishlist type"
                     >
-                        {types.map((option) => (
+                        {wishlistOptions.map((option) => (
                             <MenuItem key={option} value={option}>
                                 {option}
                             </MenuItem>
@@ -136,7 +140,7 @@ function Form({ toggleForm }): JSX.Element {
                         label="Date"
                         type="date"
                         onChange={handleDateChange}
-                        value={date}
+                        value={wishlistDate}
                         InputLabelProps={{
                             shrink: true,
                         }}
@@ -144,11 +148,11 @@ function Form({ toggleForm }): JSX.Element {
                     <TextField
                         select
                         className={classes.input}
-                        value={privacy}
+                        value={privacyType}
                         onChange={handlePrivacyChange}
                         helperText="Please select privacy type"
                     >
-                        {privacyTypes.map((option) => (
+                        {privacyOptions.map((option) => (
                             <MenuItem key={option} value={option}>
                                 {option}
                             </MenuItem>

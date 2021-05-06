@@ -3,7 +3,23 @@
     transform: scale(1.03);
 }
 
+.card {
+    position: relative;
+    border-radius: 20px;
+    width: 300px;
+    height: 180px;
+    border: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease;
+    background: $white;
+    align-self: center;
+}
+
 .card-top {
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
     background-color: $primary;
     width: 100%;
     padding: 18px 24px;

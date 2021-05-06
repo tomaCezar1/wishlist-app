@@ -1,6 +1,7 @@
-export function postRequest(data) {
-    console.log(data);
-    return fetch('http://localhost:8080/api/wishlists', {
+export const url = 'http://localhost:8080/api';
+
+export function createWishlist(data) {
+    return fetch(`${url}/wishlists`, {
         method: 'POST',
         headers: {
             'Content-type': 'application/json',
@@ -9,6 +10,6 @@ export function postRequest(data) {
     });
 }
 
-export function getWishlist() {
-    return fetch('http://localhost:8080/api/wishlists');
+export function getWishlists() {
+    return fetch(`${url}/wishlists`);
 }
