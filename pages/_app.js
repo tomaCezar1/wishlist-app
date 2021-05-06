@@ -15,11 +15,9 @@ function MyApp({ Component, pageProps }) {
     const store = createStore(formReducer);
 
     return (
-        <>
-            <Provider store={store}>
-                <Component {...pageProps} />;
-            </Provider>
-        </>
+        <Provider store={store}>
+            <Component {...pageProps} />
+        </Provider>
     );
 }
 
