@@ -17,7 +17,6 @@ function Home({ data, showForm }) {
                 <Navbar />
                 <Dashboard wishlists={data} />
                 {showForm ? <Form /> : null}
-                <footer></footer>
             </main>
         </>
     );

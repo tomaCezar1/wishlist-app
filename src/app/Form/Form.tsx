@@ -109,6 +109,7 @@ function Form({ toggleForm }): JSX.Element {
                         label="Title"
                         style={{ marginTop: 10 }}
                         value={title}
+                        inputProps={{ maxLength: 25 }}
                         onChange={handleTitleChange}
                     />
                     <TextField
@@ -132,6 +133,7 @@ function Form({ toggleForm }): JSX.Element {
                         label="Description"
                         variant="filled"
                         rows={4}
+                        inputProps={{ maxLength: 1000 }}
                         value={description}
                         onChange={handleDescriptionChange}
                     />
@@ -160,7 +162,7 @@ function Form({ toggleForm }): JSX.Element {
                     </TextField>
                 </form>
                 <button className="primary-btn form-btn" onClick={formVerification}>
-                    Create Wishlist
+                    Add Wishlist
                 </button>
             </div>
         </div>

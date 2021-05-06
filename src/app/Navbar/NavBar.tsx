@@ -16,12 +16,9 @@ function NavBar({ toggleForm }): JSX.Element {
                     New Wishlist
                 </button>
                 <div className="nav-quick-access">
-                    <Settings style={{ color: '#8f92a1', fontSize: 24 }} />
-                    <Notifications
-                        style={{ color: '#8f92a1', fontSize: 24 }}
-                        id="notifications-icon"
-                    />
-                    <Avatar alt="Guest Image" style={{ height: 48, width: 48 }} />
+                    <Settings className="nav-icons" />
+                    <Notifications className="nav-icons" />
+                    <Avatar alt="Guest Image" className="nav-avatar" />
                 </div>
             </div>
         </nav>
