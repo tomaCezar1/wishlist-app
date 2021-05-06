@@ -7,11 +7,9 @@ import Dashboard from '../Dashboard/Dashboard';
 import Form from '../Form/Form';
 
 function GlobalComponent({ data, showForm }) {
-    // Prevent srolling when Form is open
+    // Smooth scroll to top when form is clicked
     useEffect(() => {
-        showForm
-            ? (document.body.style.overflow = 'hidden')
-            : (document.body.style.overflow = 'scroll');
+        showForm ? window.scrollTo(0, 0) : null;
     });
 
     return (
@@ -23,7 +21,7 @@ function GlobalComponent({ data, showForm }) {
             <main className="container">
                 <Navbar />
                 <Dashboard wishlists={data} />
-                {showForm ? (window.scrollTo(0, 0), (<Form />)) : null}
+                {showForm ? <Form /> : null}
             </main>
         </>
     );
