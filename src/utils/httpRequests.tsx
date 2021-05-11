@@ -13,3 +13,9 @@ export function createWishlist(data) {
 export function getWishlists() {
     return fetch(`${url}/wishlists`);
 }
+
+export function deleteWishlist(id: number) {
+    return fetch(`${url}/wishlists/${id}`, {
+        method: 'DELETE',
+    }).then((res) => res.json());
+}
