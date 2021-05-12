@@ -1,0 +1,5 @@
+export const FETCH_WISHLISTS = 'FETCH_WISHLISTS';
+export const CREATE_WISHLIST = 'CREATE_WISHLIST';
+export const DELETE_WISHLIST = 'DELETE_WISHLIST';
+
+export const SHOW_FORM = 'SHOW_FORM';

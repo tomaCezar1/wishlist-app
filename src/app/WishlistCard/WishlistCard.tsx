@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Router from 'next/router';
+import { connect } from 'react-redux';
 
 import { url } from '../../utils/httpRequests';
 
@@ -10,7 +11,9 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
-function Wishlistcard({ title, id, date }): JSX.Element {
+function Wishlistcard(props): JSX.Element {
+    const { id, title, date, handleDeleteRequest } = props;
+
     const [open, setOpen] = useState(false);
 
     const handleClickOpen = () => {
@@ -19,21 +22,6 @@ function Wishlistcard({ title, id, date }): JSX.Element {
 
     const handleClose = () => {
         setOpen(false);
-    };
-
-    const handleDeleteRequest = () => {
-        fetch(`${url}/wishlists/${id}`, {
-            method: 'DELETE',
-        })
-            .then((res) => res.json())
-            .then(() => {
-                setOpen(false);
-                Router.reload();
-            })
-
-            .catch((e) => {
-                throw new Error(e);
-            });
     };
 
     return (
@@ -69,7 +57,7 @@ function Wishlistcard({ title, id, date }): JSX.Element {
                         Cancel
                     </Button>
                     <Button
-                        onClick={handleDeleteRequest}
+                        onClick={() => handleDeleteRequest(id)}
                         id="continue-btn"
                         className="dialog-btn"
                         color="primary"
@@ -81,4 +69,11 @@ function Wishlistcard({ title, id, date }): JSX.Element {
         </div>
     );
 }
-export default Wishlistcard;
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        handleDeleteRequest: (id) => dispatch({ type: 'DELETE_WISHLIST', id: id }),
+    };
+};
+
+export default connect(null, mapDispatchToProps)(Wishlistcard);

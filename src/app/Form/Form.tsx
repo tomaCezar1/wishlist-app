@@ -1,21 +1,22 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import Router from 'next/router';
 
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import { makeStyles } from '@material-ui/core/styles';
 import Close from '@material-ui/icons/Close';
+import { useFirstRender } from '../../utils/utils';
 
-import { createWishlist } from '../../utils/httpRequests';
-
-function Form({ toggleForm }): JSX.Element {
+function Form({ toggleForm, createWishlist }): JSX.Element {
     const todayDate = new Date();
     const formattedDate = todayDate.toISOString().split('T')[0];
 
     // State
     const [title, setTitle] = useState('');
     const [titleError, setTitleError] = useState(false);
+    const [titleErrorDescription, setTitleErrorDescription] = useState(
+        'Please enter your wishlist title'
+    );
     const [eventType, setEventType] = useState('None');
     const [typeError, setTypeError] = useState(false);
     const [description, setDescription] = useState('');
@@ -55,28 +56,35 @@ function Form({ toggleForm }): JSX.Element {
 
     const classes = useStyles();
 
+    // Form Verification
     const formVerification = () => {
-        // Verify if title is completed
-        if (!title) {
+        if (!title || title.trim().length === 0) {
             setTitleError(true);
-            return;
+        } else if (!/^[\sA-Za-z]*$/.test(title)) {
+            setTitleError(true);
+            setTitleErrorDescription('Symbols, whitespaces and numbers are not valid');
         } else {
             setTitleError(false);
+            setTitleErrorDescription('Please enter your wishlist title');
         }
 
-        // Verify wishlist type
         if (eventType === 'None' || !eventType) {
             setTypeError(true);
-            return;
         } else {
             setTypeError(false);
         }
-
-        formRequest();
-        toggleForm();
-        Router.reload();
     };
 
+    const firstRender = useFirstRender();
+
+    useEffect(() => {
+        if (!firstRender && !titleError && !typeError) {
+            formRequest();
+            toggleForm();
+        }
+    }, [typeError, titleError]);
+
+    // Form Request
     const formRequest = () => {
         const privacyTypeUppercase = privacyType.toUpperCase();
         const eventTypeUppercase = eventType.toUpperCase();
@@ -90,9 +98,7 @@ function Form({ toggleForm }): JSX.Element {
             privacyType: privacyTypeUppercase,
         };
 
-        createWishlist(postData).catch((e) => {
-            throw new Error(e);
-        });
+        createWishlist(postData);
     };
 
     return (
@@ -101,20 +107,22 @@ function Form({ toggleForm }): JSX.Element {
                 <i className="form-delete-btn" onClick={toggleForm}>
                     <Close />
                 </i>
-                <form action="" className="wishlist-form">
-                    <h1 className="form-title">Create wishlist</h1>
+                <form className="wishlist-form">
+                    <h1 className="form-title">Create Wishlist</h1>
                     <TextField
                         required
                         error={titleError}
-                        label="Title"
+                        label="Wishlist Title"
                         style={{ marginTop: 10 }}
                         value={title}
                         inputProps={{ maxLength: 25 }}
                         onChange={handleTitleChange}
+                        helperText={titleErrorDescription}
                     />
                     <TextField
                         select
                         required
+                        label="Wishlist Type"
                         error={typeError}
                         value={eventType}
                         className={classes.input}
@@ -149,10 +157,11 @@ function Form({ toggleForm }): JSX.Element {
                     />
                     <TextField
                         select
+                        required
+                        label="Privacy Type"
                         className={classes.input}
                         value={privacyType}
                         onChange={handlePrivacyChange}
-                        helperText="Please select privacy type"
                     >
                         {privacyOptions.map((option) => (
                             <MenuItem key={option} value={option}>
@@ -172,6 +181,7 @@ function Form({ toggleForm }): JSX.Element {
 const mapDispatchToProps = (dispatch) => {
     return {
         toggleForm: () => dispatch({ type: 'SHOW_FORM' }),
+        createWishlist: (data) => dispatch({ type: 'CREATE_WISHLIST', wishlists: data }),
     };
 };
 
