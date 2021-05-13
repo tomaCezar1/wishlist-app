@@ -8,17 +8,25 @@ const checkforEmptyObject = (object): boolean => {
     if (Object.keys(object).length === 0 && object.constructor === Object) return true;
 };
 
-function Home({ data, wishlists, fetchInitialWishlists }): JSX.Element {
+function Index(props): JSX.Element {
+    const { isLoggedIn, data, wishlists, fetchInitialWishlists } = props;
+
     useEffect(() => {
         fetchInitialWishlists(data);
     }, []);
 
-    return <MainComponent data={checkforEmptyObject(wishlists) ? [] : wishlists} />;
+    return (
+        <MainComponent
+            isLoggedIn={isLoggedIn}
+            data={checkforEmptyObject(wishlists) ? [] : wishlists}
+        />
+    );
 }
 
 const mapStateToProps = (state) => {
     return {
         wishlists: state.allWishlists,
+        isLoggedIn: state.isLoggedIn,
     };
 };
 
@@ -30,7 +38,7 @@ const mapDispatchToProps = (dispatch) => {
     };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Home);
+export default connect(mapStateToProps, mapDispatchToProps)(Index);
 
 export async function getServerSideProps() {
     const res = await getWishlists().catch((e) => console.log('Error: ', e.message));

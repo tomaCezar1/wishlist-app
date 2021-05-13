@@ -1,17 +1,20 @@
 import { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 
 import { Provider } from 'react-redux';
 import { createStore, applyMiddleware } from 'redux';
 import createSagaMiddleware from 'redux-saga';
 import reducer from '../src/store/reducers/reducer';
+import watchSagas from '../src/store/sagas/sagas';
 
 import { ThemeProvider } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import theme from '../src/styles/Theme/theme';
 import '../src/styles/globals.scss';
-import watchSagas from '../src/store/sagas/sagas';
+
+import Home from './index';
 
 function MyApp(props) {
     const { Component, pageProps } = props;
@@ -24,11 +27,21 @@ function MyApp(props) {
         }
     }, []);
 
+    // Redux
     const sagaMiddleware = createSagaMiddleware();
-
     const store = createStore(reducer, applyMiddleware(sagaMiddleware));
-
     sagaMiddleware.run(watchSagas);
+
+    // Routing
+    const storeState = store.getState();
+    const loginState = storeState.isLoggedIn;
+
+    const router = useRouter();
+    if (typeof window !== 'undefined' && !loginState && router.pathname.startsWith('/dashboard')) {
+        router.push('/');
+    }
+
+    const ComponentToRender = loginState ? Component : Home;
 
     return (
         <>
@@ -43,7 +56,7 @@ function MyApp(props) {
             <Provider store={store}>
                 <ThemeProvider theme={theme}>
                     <CssBaseline />
-                    <Component {...pageProps} />
+                    <ComponentToRender {...pageProps} />
                 </ThemeProvider>
             </Provider>
         </>
