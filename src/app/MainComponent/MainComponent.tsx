@@ -3,11 +3,12 @@ import { connect } from 'react-redux';
 
 import Navbar from '../Navbar/NavBar';
 import Dashboard from '../Dashboard/Dashboard';
-import Form from '../Form/Form';
+import WishlistForm from '../Forms/WishlistForm';
+import AuthForm from '../Forms/AuthForm';
 import LandingPage from '../LandingPage/LandingPage';
 import Footer from '../Footer/Footer';
 
-function MainComponent({ isLoggedIn, data, showForm }): JSX.Element {
+function MainComponent({ isLoggedIn, data, showForm, registerForm }): JSX.Element {
     // Smooth scroll to top when form is clicked
     useEffect(() => {
         showForm ? window.scrollTo(0, 0) : null;
@@ -22,10 +23,13 @@ function MainComponent({ isLoggedIn, data, showForm }): JSX.Element {
                 {isLoggedIn ? (
                     <>
                         <Dashboard wishlists={data} />
-                        {showForm ? <Form /> : null}
+                        {showForm ? <WishlistForm /> : null}
                     </>
                 ) : (
-                    <LandingPage />
+                    <>
+                        <LandingPage />
+                        {registerForm ? <AuthForm /> : null}
+                    </>
                 )}
                 <Footer />
             </div>
@@ -36,6 +40,7 @@ function MainComponent({ isLoggedIn, data, showForm }): JSX.Element {
 const mapStateToProps = (state) => {
     return {
         showForm: state.showForm,
+        registerForm: state.registerForm,
     };
 };
 

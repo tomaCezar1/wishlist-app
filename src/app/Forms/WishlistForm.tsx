@@ -1,15 +1,17 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import { makeStyles } from '@material-ui/core/styles';
 import Close from '@material-ui/icons/Close';
-import { useFirstRender } from '../../utils/utils';
 
-function Form({ toggleForm, createWishlist }): JSX.Element {
-    const todayDate = new Date();
-    const formattedDate = todayDate.toISOString().split('T')[0];
+import { useFirstRender } from '../../utils/utils';
+import * as actions from '../../store/actions/actionTypes';
+
+function WishlistForm({ toggleForm, createWishlist }): JSX.Element {
+    const todayDate: Date = new Date();
+    const formattedDate: string = todayDate.toISOString().split('T')[0];
 
     // State
     const [title, setTitle] = useState('');
@@ -24,15 +26,15 @@ function Form({ toggleForm, createWishlist }): JSX.Element {
     const [privacyType, setPrivacyType] = useState('Private');
 
     // Event Handlers
-    const handleTitleChange = (event) => {
+    const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setTitle(event.target.value);
     };
 
-    const handleTypeChange = (event) => {
+    const handleTypeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setEventType(event.target.value);
     };
 
-    const handlePrivacyChange = (event) => {
+    const handlePrivacyChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setPrivacyType(event.target.value);
     };
 
@@ -40,7 +42,7 @@ function Form({ toggleForm, createWishlist }): JSX.Element {
         setWishlistDate(event.target.value);
     };
 
-    const handleDescriptionChange = (event) => {
+    const handleDescriptionChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
         setDescription(event.target.value);
     };
 
@@ -113,7 +115,6 @@ function Form({ toggleForm, createWishlist }): JSX.Element {
                         required
                         error={titleError}
                         label="Wishlist Title"
-                        style={{ marginTop: 10 }}
                         value={title}
                         inputProps={{ maxLength: 25 }}
                         onChange={handleTitleChange}
@@ -180,9 +181,9 @@ function Form({ toggleForm, createWishlist }): JSX.Element {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        toggleForm: () => dispatch({ type: 'SHOW_FORM' }),
-        createWishlist: (data) => dispatch({ type: 'CREATE_WISHLIST', wishlists: data }),
+        toggleForm: () => dispatch({ type: actions.SHOW_FORM }),
+        createWishlist: (data) => dispatch({ type: actions.CREATE_WISHLIST, wishlists: data }),
     };
 };
 
-export default connect(null, mapDispatchToProps)(Form);
+export default connect(null, mapDispatchToProps)(WishlistForm);
