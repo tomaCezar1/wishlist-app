@@ -4,19 +4,32 @@ import { connect } from 'react-redux';
 import Navbar from '../Navbar/NavBar';
 import Dashboard from '../Dashboard/Dashboard';
 import Form from '../Form/Form';
+import LandingPage from '../LandingPage/LandingPage';
+import Footer from '../Footer/Footer';
 
-function GlobalComponent({ data, showForm }): JSX.Element {
+function MainComponent({ isLoggedIn, data, showForm }): JSX.Element {
     // Smooth scroll to top when form is clicked
     useEffect(() => {
         showForm ? window.scrollTo(0, 0) : null;
     });
 
     return (
-        <main className="container">
-            <Navbar />
-            <Dashboard wishlists={data} />
-            {showForm ? <Form /> : null}
-        </main>
+        <>
+            <div className="page-container">
+                <header>
+                    <Navbar isLoggedIn={isLoggedIn} />
+                </header>
+                {isLoggedIn ? (
+                    <>
+                        <Dashboard wishlists={data} />
+                        {showForm ? <Form /> : null}
+                    </>
+                ) : (
+                    <LandingPage />
+                )}
+                <Footer />
+            </div>
+        </>
     );
 }
 
@@ -26,4 +39,4 @@ const mapStateToProps = (state) => {
     };
 };
 
-export default connect(mapStateToProps, null)(GlobalComponent);
+export default connect(mapStateToProps, null)(MainComponent);

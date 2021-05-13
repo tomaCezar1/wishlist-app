@@ -3,6 +3,7 @@ import * as actions from '../actions/actionTypes';
 const initialState = {
     showForm: false,
     allWishlists: {},
+    isLoggedIn: true,
 };
 
 const reducer = (state = initialState, action) => {

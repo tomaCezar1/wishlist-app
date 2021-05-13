@@ -1,0 +1,82 @@
+.landing-container {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 1440px;
+    margin: auto;
+}
+
+.landing-title-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    text-align: left;
+}
+
+.landing-img-container {
+    margin-right: 30px;
+    min-width: 300px;
+    min-height: 300px;
+}
+
+.landing-title {
+    font-size: 64px;
+    line-height: 68px;
+    font-weight: $bold;
+    text-align: left;
+}
+
+.nav-2 {
+    padding: 0 15px;
+    border-radius: 50%;
+    background-color: $primary;
+    color: $white;
+    font-weight: $regular;
+}
+
+.title-2 {
+    padding: 0 15px;
+    background-color: $primary;
+    border-radius: 24px;
+    color: $white;
+    font-weight: $regular;
+}
+
+.landing-greeting {
+    width: 400px;
+    margin-top: 10px;
+    font-size: 20px;
+    font-weight: $regular;
+    color: $grey;
+}
+
+.nav-landing-container {
+    max-width: 1440px;
+    margin: auto;
+    display: flex;
+    justify-content: space-between;
+}
+
+.landing-heading {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    transition: transform 0.3s ease-in-out;
+
+    &:hover {
+        transform: rotate(-2deg) scale(1.02);
+    }
+}
+
+.landing-button-container {
+    display: flex;
+}
+
+.register-btn {
+    margin-right: 18px;
+}
+
+.login-btn {
+    margin-right: 0;
+}
