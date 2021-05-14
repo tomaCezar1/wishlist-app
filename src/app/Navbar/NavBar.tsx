@@ -4,7 +4,15 @@ import Settings from '@material-ui/icons/SettingsOutlined';
 import Notifications from '@material-ui/icons/NotificationsOutlined';
 import { Avatar } from '@material-ui/core';
 
-function NavBar({ toggleForm, isLoggedIn }): JSX.Element {
+import * as actions from '../../store/actions/actionTypes';
+
+interface Props {
+    isLoggedIn: boolean;
+    toggleForm: () => void;
+    toggleRegisterForm: () => void;
+}
+
+function NavBar({ isLoggedIn, toggleForm, toggleRegisterForm }: Props): JSX.Element {
     return (
         <nav className={`${isLoggedIn ? 'navbar' : 'nav-landing-container'}`}>
             {isLoggedIn ? (
@@ -32,7 +40,12 @@ function NavBar({ toggleForm, isLoggedIn }): JSX.Element {
                         </h1>
                     </div>
                     <div className="landing-button-container">
-                        <button className="primary-btn nav-btn register-btn">Register</button>
+                        <button
+                            className="primary-btn nav-btn register-btn"
+                            onClick={toggleRegisterForm}
+                        >
+                            Register
+                        </button>
                         <button className="primary-btn nav-btn login-btn">Login</button>
                     </div>
                 </>
@@ -43,7 +56,8 @@ function NavBar({ toggleForm, isLoggedIn }): JSX.Element {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        toggleForm: () => dispatch({ type: 'SHOW_FORM' }),
+        toggleForm: () => dispatch({ type: actions.SHOW_FORM }),
+        toggleRegisterForm: () => dispatch({ type: actions.SHOW_REGISTER_FORM }),
     };
 };
 

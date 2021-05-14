@@ -1,8 +1,16 @@
 import * as actions from '../actions/actionTypes';
 
-const initialState = {
+interface InitialState {
+    showForm: boolean;
+    registerForm: boolean;
+    allWishlists: { id: number; title: string; wishListDate: string }[];
+    isLoggedIn: boolean;
+}
+
+const initialState: InitialState = {
     showForm: false,
-    allWishlists: {},
+    registerForm: false,
+    allWishlists: [],
     isLoggedIn: true,
 };
 
@@ -13,6 +21,14 @@ const reducer = (state = initialState, action) => {
             showForm: !state.showForm,
         };
     }
+
+    if (action.type === actions.SHOW_REGISTER_FORM) {
+        return {
+            ...state,
+            registerForm: !state.registerForm,
+        };
+    }
+
     if (action.type === actions.FETCH_WISHLISTS) {
         return {
             ...state,
