@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
 
 import TextField from '@material-ui/core/TextField';
@@ -6,8 +6,8 @@ import MenuItem from '@material-ui/core/MenuItem';
 import { makeStyles } from '@material-ui/core/styles';
 import Close from '@material-ui/icons/Close';
 
-import { useFirstRender } from '../../utils/utils';
 import * as actions from '../../store/actions/actionTypes';
+import { PostWishlistData } from '../../utils/interfaces';
 
 function WishlistForm({ toggleForm, createWishlist }): JSX.Element {
     const todayDate: Date = new Date();
@@ -86,7 +86,7 @@ function WishlistForm({ toggleForm, createWishlist }): JSX.Element {
         const eventTypeUppercase = eventType.toUpperCase();
         const formattedDateforRequest = wishlistDate.concat('T00:00:00');
 
-        const postData = {
+        const postData: PostWishlistData = {
             title,
             eventType: eventTypeUppercase,
             description,
@@ -113,6 +113,9 @@ function WishlistForm({ toggleForm, createWishlist }): JSX.Element {
                         inputProps={{ maxLength: 25 }}
                         onChange={handleTitleChange}
                         helperText={titleErrorDescription}
+                        // InputLabelProps={{
+                        // shrink: true,
+                        // }}
                     />
                     <TextField
                         select
@@ -175,8 +178,9 @@ function WishlistForm({ toggleForm, createWishlist }): JSX.Element {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        toggleForm: () => dispatch({ type: actions.SHOW_FORM }),
-        createWishlist: (data) => dispatch({ type: actions.CREATE_WISHLIST, wishlists: data }),
+        toggleForm: () => dispatch({ type: actions.SHOW_CREATE_WISHLIST_FORM }),
+        createWishlist: (data: PostWishlistData) =>
+            dispatch({ type: actions.CREATE_WISHLIST, wishlists: data }),
     };
 };
 
