@@ -60,31 +60,25 @@ function WishlistForm({ toggleForm, createWishlist }): JSX.Element {
 
     // Form Verification
     const formVerification = () => {
-        if (!title || title.trim().length === 0) {
-            setTitleError(true);
-        } else if (!/^[\sA-Za-z]*$/.test(title)) {
-            setTitleError(true);
+        const titleValid = /^[\sA-Za-z]*$/.test(title) && title?.trim();
+        const eventTypeValid = eventType !== 'None';
+
+        if (!/^[\sA-Za-z]*$/.test(title)) {
             setTitleErrorDescription('Symbols, whitespaces and numbers are not valid');
-        } else {
-            setTitleError(false);
+        }
+
+        if (!title?.trim()) {
             setTitleErrorDescription('Please enter your wishlist title');
         }
 
-        if (eventType === 'None' || !eventType) {
-            setTypeError(true);
-        } else {
-            setTypeError(false);
-        }
-    };
+        setTitleError(!titleValid);
+        setTypeError(!eventTypeValid);
 
-    const firstRender = useFirstRender();
-
-    useEffect(() => {
-        if (!firstRender && !titleError && !typeError) {
+        if (titleValid && eventTypeValid) {
             formRequest();
             toggleForm();
         }
-    }, [typeError, titleError]);
+    };
 
     // Form Request
     const formRequest = () => {

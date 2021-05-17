@@ -41,7 +41,7 @@ const mapDispatchToProps = (dispatch) => {
 export default connect(mapStateToProps, mapDispatchToProps)(Index);
 
 export async function getServerSideProps() {
-    const res = await getWishlists().catch((e) => console.log('Error: ', e.message));
+    const res = await getWishlists();
     const data = await res.json();
 
     return {

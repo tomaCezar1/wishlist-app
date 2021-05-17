@@ -1,4 +1,4 @@
-export const url = 'http://localhost:8080/api';
+export const url = 'https://wishlist-service-app2.herokuapp.com/api';
 
 export function createWishlist(data) {
     return fetch(`${url}/wishlists`, {
