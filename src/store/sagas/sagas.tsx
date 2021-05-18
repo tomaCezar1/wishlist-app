@@ -1,15 +1,18 @@
-import { put, takeLatest, all } from 'redux-saga/effects';
+import { put, takeLatest, all, select } from 'redux-saga/effects';
 
 import { createWishlist, deleteWishlist, getWishlists } from '../../utils/httpRequests';
 import * as actions from '../actions/actionTypes';
 
+const getToken = (state) => state.token;
+
 function* getWishlistsSaga() {
-    const wishlists = yield getWishlists().then((res) =>
+    const token = yield select(getToken);
+    const wishlists = yield getWishlists(token).then((res) =>
         res.json().catch((e) => {
             throw new Error(e);
         })
     );
-    yield put({ type: actions.FETCH_WISHLISTS, wishlists: wishlists });
+    yield put({ type: actions.UPDATE_WISHLISTS, wishlists: wishlists });
 }
 
 function* deleteWishlistSaga(action) {
@@ -20,7 +23,8 @@ function* deleteWishlistSaga(action) {
 }
 
 function* createWishlistSaga(action) {
-    yield createWishlist(action.wishlists);
+    const token = yield select(getToken);
+    yield createWishlist(action.wishlists, token);
     yield getWishlistsSaga();
 }
 

@@ -56,7 +56,7 @@ function NavBar({ isLoggedIn, toggleForm, toggleRegisterForm }: Props): JSX.Elem
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        toggleForm: () => dispatch({ type: actions.SHOW_FORM }),
+        toggleForm: () => dispatch({ type: actions.SHOW_CREATE_WISHLIST_FORM }),
         toggleRegisterForm: () => dispatch({ type: actions.SHOW_REGISTER_FORM }),
     };
 };

@@ -2,6 +2,7 @@ import { connect } from 'react-redux';
 import React, { useState } from 'react';
 
 import * as actions from '../../store/actions/actionTypes';
+import { RegisterCredentials } from '../../utils/interfaces';
 
 import Close from '@material-ui/icons/Close';
 import TextField from '@material-ui/core/TextField';
@@ -12,10 +13,13 @@ import IconButton from '@material-ui/core/IconButton';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import FormControl from '@material-ui/core/FormControl';
+import FormHelperText from '@material-ui/core/FormHelperText';
 import { makeStyles } from '@material-ui/core/styles';
+import { registerUser } from '../../utils/httpRequests';
 
 interface Props {
     toggleRegisterForm: () => void;
+    setToken: (token: string) => void;
 }
 
 interface State {
@@ -26,7 +30,13 @@ interface State {
     showPassword: boolean;
 }
 
-function AuthForm({ toggleRegisterForm }: Props): JSX.Element {
+interface Errors {
+    error: boolean;
+    description: string;
+}
+
+function AuthForm({ toggleRegisterForm, setToken }: Props): JSX.Element {
+    // State
     const [values, setValues] = useState<State>({
         name: '',
         email: '',
@@ -35,6 +45,27 @@ function AuthForm({ toggleRegisterForm }: Props): JSX.Element {
         showPassword: false,
     });
 
+    const [nameErrors, setNameErrors] = useState<Errors>({
+        error: false,
+        description: ' ',
+    });
+
+    const [emailErrors, setEmailErrors] = useState<Errors>({
+        error: false,
+        description: ' ',
+    });
+
+    const [passwordErrors, setPasswordErrors] = useState<Errors>({
+        error: false,
+        description: ' ',
+    });
+
+    const [confirmPasswordErrors, setConfirmPasswordErrors] = useState<Errors>({
+        error: false,
+        description: ' ',
+    });
+
+    // Handlers
     const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setValues({ ...values, name: event.target.value });
     };
@@ -55,9 +86,79 @@ function AuthForm({ toggleRegisterForm }: Props): JSX.Element {
         setValues({ ...values, showPassword: !values.showPassword });
     };
 
+    // Form verification
+    const formVerification = () => {
+        const nameInvalid = values.name.length < 1;
+        const emailInvalid = !/^[^@]+@\w+(\.\w+)+\w$/.test(values.email);
+        const passwordInvalid = values.password.length < 1 || values.password.length < 8;
+        const confirmPasswordInvalid =
+            values.confirmPassword !== values.password || values.confirmPassword.length < 1;
+        {
+            nameInvalid
+                ? setNameErrors({ error: true, description: 'Please enter a full name' })
+                : setNameErrors({ error: false, description: ' ' });
+        }
+
+        {
+            emailInvalid
+                ? setEmailErrors({
+                      error: true,
+                      description: 'Please enter a valid email address',
+                  })
+                : setEmailErrors({ error: false, description: ' ' });
+        }
+
+        if (values.password.length < 1) {
+            setPasswordErrors({ error: true, description: 'Please enter a password' });
+        } else if (values.password.length < 8) {
+            setPasswordErrors({ error: true, description: 'The password is too short' });
+        } else setPasswordErrors({ error: false, description: ' ' });
+
+        if (values.password !== values.confirmPassword) {
+            setConfirmPasswordErrors({
+                error: true,
+                description: 'Passwords do not match',
+            });
+        } else if (values.confirmPassword.length < 1) {
+            setConfirmPasswordErrors({
+                error: true,
+                description: 'Confirm the password',
+            });
+        } else {
+            setConfirmPasswordErrors({ error: false, description: ' ' });
+        }
+
+        if (!nameInvalid && !emailInvalid && !passwordInvalid && !confirmPasswordInvalid) {
+            registerRequest();
+        }
+    };
+
+    const registerRequest = () => {
+        const authData: RegisterCredentials = {
+            fullName: values.name,
+            username: values.email,
+            password: values.password,
+            confirmPassword: values.confirmPassword,
+        };
+
+        registerUser(authData)
+            .then((res) => res.json())
+            .then((res) => {
+                if (res.status === 409) {
+                    setEmailErrors({
+                        error: true,
+                        description: 'There is an existing account with this email',
+                    });
+                    return;
+                }
+                setToken(res.jwt);
+            });
+    };
+
+    // Styles
     const useStyles = makeStyles({
         marginTop: {
-            marginTop: 20,
+            marginTop: 14,
         },
     });
 
@@ -75,53 +176,39 @@ function AuthForm({ toggleRegisterForm }: Props): JSX.Element {
                         required
                         label="Full Name"
                         type="text"
+                        inputProps={{ maxLength: 50 }}
                         value={values.name}
                         onChange={handleNameChange}
-                        inputProps={{ maxLength: 20 }}
-                        // InputLabelProps={{
-                        // shrink: true,
-                        // }}
-                        // error={}
-                        // helperText={}
+                        error={nameErrors.error}
+                        helperText={nameErrors.description}
                     />
+
                     <TextField
                         required
                         type="text"
                         label="Email"
                         className={classes.marginTop}
+                        inputProps={{ maxLength: 40 }}
                         value={values.email}
                         onChange={handleEmailChange}
+                        error={emailErrors.error}
+                        helperText={emailErrors.description}
                     />
 
                     <FormControl required className={classes.marginTop}>
-                        <InputLabel htmlFor="standard-adornment-password">Password</InputLabel>
-                        <Input
-                            id="standard-adornment-password"
-                            type={values.showPassword ? 'text' : 'password'}
-                            value={values.password}
-                            onChange={handlePasswordChange}
-                            endAdornment={
-                                <InputAdornment position="end">
-                                    <IconButton
-                                        aria-label="toggle password visibility"
-                                        onClick={handleClickShowPassword}
-                                    >
-                                        {values.showPassword ? <Visibility /> : <VisibilityOff />}
-                                    </IconButton>
-                                </InputAdornment>
-                            }
-                        />
-                    </FormControl>
-
-                    <FormControl required className={classes.marginTop}>
-                        <InputLabel htmlFor="standard-adornment-password">
-                            Confirm Password
+                        <InputLabel
+                            error={passwordErrors.error}
+                            htmlFor="standard-adornment-password"
+                        >
+                            Password
                         </InputLabel>
                         <Input
                             id="standard-adornment-password"
                             type={values.showPassword ? 'text' : 'password'}
-                            value={values.confirmPassword}
-                            onChange={handleConfirmPasswordChange}
+                            value={values.password}
+                            error={passwordErrors.error}
+                            onChange={handlePasswordChange}
+                            inputProps={{ maxLength: 25 }}
                             endAdornment={
                                 <InputAdornment position="end">
                                     <IconButton
@@ -133,9 +220,48 @@ function AuthForm({ toggleRegisterForm }: Props): JSX.Element {
                                 </InputAdornment>
                             }
                         />
+                        <FormHelperText
+                            error={passwordErrors.error}
+                            // eslint-disable-next-line react/no-children-prop
+                            children={passwordErrors.description}
+                        />
+                    </FormControl>
+
+                    <FormControl required className={classes.marginTop}>
+                        <InputLabel
+                            error={confirmPasswordErrors.error}
+                            htmlFor="standard-adornment-confirmationPassword"
+                        >
+                            Confirm Password
+                        </InputLabel>
+                        <Input
+                            id="standard-adornment-confirmationPassword"
+                            type={values.showPassword ? 'text' : 'password'}
+                            value={values.confirmPassword}
+                            onChange={handleConfirmPasswordChange}
+                            error={confirmPasswordErrors.error}
+                            inputProps={{ maxLength: 25 }}
+                            endAdornment={
+                                <InputAdornment position="end">
+                                    <IconButton
+                                        aria-label="toggle password visibility"
+                                        onClick={handleClickShowPassword}
+                                    >
+                                        {values.showPassword ? <Visibility /> : <VisibilityOff />}
+                                    </IconButton>
+                                </InputAdornment>
+                            }
+                        />
+                        <FormHelperText
+                            error={confirmPasswordErrors.error}
+                            // eslint-disable-next-line react/no-children-prop
+                            children={confirmPasswordErrors.description}
+                        />
                     </FormControl>
                 </form>
-                <button className="primary-btn form-btn">Register</button>
+                <button className="primary-btn form-btn" onClick={formVerification}>
+                    Register
+                </button>
             </div>
         </div>
     );
@@ -144,6 +270,7 @@ function AuthForm({ toggleRegisterForm }: Props): JSX.Element {
 const mapDispatchToProps = (dispatch) => {
     return {
         toggleRegisterForm: () => dispatch({ type: actions.SHOW_REGISTER_FORM }),
+        setToken: (token: string) => dispatch({ type: actions.ACCOUNT_REGISTRATION, token: token }),
     };
 };
 

@@ -2,7 +2,7 @@ import * as actions from './actionTypes';
 
 export const addWishlist = () => {
     return {
-        type: actions.SHOW_FORM,
+        type: actions.SHOW_CREATE_WISHLIST_FORM,
     };
 };
 
