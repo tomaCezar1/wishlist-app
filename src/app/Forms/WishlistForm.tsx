@@ -6,7 +6,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import { makeStyles } from '@material-ui/core/styles';
 import Close from '@material-ui/icons/Close';
 
-import * as actions from '../../store/actions/actionTypes';
+import * as actions from '../../store/actions/actions';
 import { PostWishlistData } from '../../utils/interfaces';
 
 function WishlistForm({ toggleForm, createWishlist }): JSX.Element {
@@ -178,9 +178,8 @@ function WishlistForm({ toggleForm, createWishlist }): JSX.Element {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        toggleForm: () => dispatch({ type: actions.SHOW_CREATE_WISHLIST_FORM }),
-        createWishlist: (data: PostWishlistData) =>
-            dispatch({ type: actions.CREATE_WISHLIST, wishlists: data }),
+        toggleForm: () => dispatch(actions.showWishlistForm()),
+        createWishlist: (wishlist: PostWishlistData) => dispatch(actions.createWishlist(wishlist)),
     };
 };
 

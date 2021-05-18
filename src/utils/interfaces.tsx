@@ -1,3 +1,12 @@
+export interface AppState {
+    showWishlistForm: boolean;
+    showRegisterForm: boolean;
+    showLoginForm: boolean;
+    allWishlists: { id: number; title: string; wishListDate: string }[];
+    isLoggedIn: boolean;
+    token: string;
+}
+
 export interface PostWishlistData {
     description: string;
     eventType: string;
@@ -8,6 +17,12 @@ export interface PostWishlistData {
 
 export interface RegisterCredentials {
     fullName: string;
+    username: string;
+    password: string;
+    confirmPassword: string;
+}
+
+export interface LoginCredentials {
     username: string;
     password: string;
     confirmPassword: string;

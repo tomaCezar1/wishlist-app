@@ -3,18 +3,23 @@ import { connect } from 'react-redux';
 
 import Navbar from '../Navbar/NavBar';
 import Dashboard from '../Dashboard/Dashboard';
-import WishlistForm from '../Forms/WishlistForm';
-import AuthForm from '../Forms/AuthForm';
-import LandingPage from '../LandingPage/LandingPage';
 import Footer from '../Footer/Footer';
+import LandingPage from '../LandingPage/LandingPage';
+import WishlistForm from '../Forms/WishlistForm';
+import RegisterForm from '../Forms/RegisterForm';
+import LoginForm from '../Forms/LoginForm';
+
 import { getWishlists } from '../../utils/httpRequests';
+import { AppState } from '../../utils/interfaces';
+import * as actions from '../../store/actions/actions';
 
 interface Props {
     isLoggedIn: boolean;
     updateInitialWishlists: (data) => void;
     token: string;
-    showForm: boolean;
-    registerForm: boolean;
+    showWishlistForm: boolean;
+    showRegisterForm: boolean;
+    showLoginForm: boolean;
     wishlistsFromStore: { id: number; title: string; wishListDate: string }[];
 }
 
@@ -23,8 +28,9 @@ function MainComponent(props: Props): JSX.Element {
         isLoggedIn,
         updateInitialWishlists,
         token,
-        showForm,
-        registerForm,
+        showWishlistForm,
+        showRegisterForm,
+        showLoginForm,
         wishlistsFromStore,
     } = props;
 
@@ -38,7 +44,7 @@ function MainComponent(props: Props): JSX.Element {
 
     // Smooth scroll to top when form is clicked
     useEffect(() => {
-        showForm ? window.scrollTo(0, 0) : null;
+        showWishlistForm ? window.scrollTo(0, 0) : null;
     });
 
     useEffect(() => {
@@ -58,12 +64,13 @@ function MainComponent(props: Props): JSX.Element {
                 {isLoggedIn ? (
                     <>
                         <Dashboard wishlists={wishlists} />
-                        {showForm ? <WishlistForm /> : null}
+                        {showWishlistForm ? <WishlistForm /> : null}
                     </>
                 ) : (
                     <>
                         <LandingPage />
-                        {registerForm ? <AuthForm /> : null}
+                        {showRegisterForm ? <RegisterForm /> : null}
+                        {showLoginForm ? <LoginForm /> : null}
                     </>
                 )}
                 <Footer />
@@ -72,10 +79,11 @@ function MainComponent(props: Props): JSX.Element {
     );
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state: AppState) => {
     return {
-        showForm: state.showForm,
-        registerForm: state.registerForm,
+        showWishlistForm: state.showWishlistForm,
+        showRegisterForm: state.showRegisterForm,
+        showLoginForm: state.showLoginForm,
         wishlistsFromStore: state.allWishlists,
         isLoggedIn: state.isLoggedIn,
         token: state.token,
@@ -84,8 +92,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        updateInitialWishlists: (data) => {
-            dispatch({ type: 'UPDATE_WISHLISTS', wishlists: data });
+        updateInitialWishlists: (wishlists) => {
+            dispatch(actions.updateStoreWishlists(wishlists));
         },
     };
 };

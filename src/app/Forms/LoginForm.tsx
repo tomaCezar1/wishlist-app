@@ -1,8 +1,9 @@
 import { connect } from 'react-redux';
 import React, { useState } from 'react';
 
-import * as actions from '../../store/actions/actionTypes';
-import { RegisterCredentials } from '../../utils/interfaces';
+import * as actions from '../../store/actions/actions';
+import { LoginCredentials } from '../../utils/interfaces';
+import { loginUser } from '../../utils/httpRequests';
 
 import Close from '@material-ui/icons/Close';
 import TextField from '@material-ui/core/TextField';
@@ -15,15 +16,12 @@ import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import { makeStyles } from '@material-ui/core/styles';
-import { registerUser } from '../../utils/httpRequests';
 
 interface Props {
-    toggleRegisterForm: () => void;
-    setToken: (token: string) => void;
+    toggleLoginForm: () => void;
 }
 
-interface State {
-    name: string;
+interface LoginState {
     email: string;
     password: string;
     confirmPassword: string;
@@ -35,19 +33,13 @@ interface Errors {
     description: string;
 }
 
-function AuthForm({ toggleRegisterForm, setToken }: Props): JSX.Element {
+function LoginForm({ toggleLoginForm }: Props): JSX.Element {
     // State
-    const [values, setValues] = useState<State>({
-        name: '',
+    const [values, setValues] = useState<LoginState>({
         email: '',
         password: '',
         confirmPassword: '',
         showPassword: false,
-    });
-
-    const [nameErrors, setNameErrors] = useState<Errors>({
-        error: false,
-        description: ' ',
     });
 
     const [emailErrors, setEmailErrors] = useState<Errors>({
@@ -66,10 +58,6 @@ function AuthForm({ toggleRegisterForm, setToken }: Props): JSX.Element {
     });
 
     // Handlers
-    const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setValues({ ...values, name: event.target.value });
-    };
-
     const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setValues({ ...values, email: event.target.value });
     };
@@ -87,73 +75,7 @@ function AuthForm({ toggleRegisterForm, setToken }: Props): JSX.Element {
     };
 
     // Form verification
-    const formVerification = () => {
-        const nameInvalid = values.name.length < 1;
-        const emailInvalid = !/^[^@]+@\w+(\.\w+)+\w$/.test(values.email);
-        const passwordInvalid = values.password.length < 1 || values.password.length < 8;
-        const confirmPasswordInvalid =
-            values.confirmPassword !== values.password || values.confirmPassword.length < 1;
-        {
-            nameInvalid
-                ? setNameErrors({ error: true, description: 'Please enter a full name' })
-                : setNameErrors({ error: false, description: ' ' });
-        }
-
-        {
-            emailInvalid
-                ? setEmailErrors({
-                      error: true,
-                      description: 'Please enter a valid email address',
-                  })
-                : setEmailErrors({ error: false, description: ' ' });
-        }
-
-        if (values.password.length < 1) {
-            setPasswordErrors({ error: true, description: 'Please enter a password' });
-        } else if (values.password.length < 8) {
-            setPasswordErrors({ error: true, description: 'The password is too short' });
-        } else setPasswordErrors({ error: false, description: ' ' });
-
-        if (values.password !== values.confirmPassword) {
-            setConfirmPasswordErrors({
-                error: true,
-                description: 'Passwords do not match',
-            });
-        } else if (values.confirmPassword.length < 1) {
-            setConfirmPasswordErrors({
-                error: true,
-                description: 'Confirm the password',
-            });
-        } else {
-            setConfirmPasswordErrors({ error: false, description: ' ' });
-        }
-
-        if (!nameInvalid && !emailInvalid && !passwordInvalid && !confirmPasswordInvalid) {
-            registerRequest();
-        }
-    };
-
-    const registerRequest = () => {
-        const authData: RegisterCredentials = {
-            fullName: values.name,
-            username: values.email,
-            password: values.password,
-            confirmPassword: values.confirmPassword,
-        };
-
-        registerUser(authData)
-            .then((res) => res.json())
-            .then((res) => {
-                if (res.status === 409) {
-                    setEmailErrors({
-                        error: true,
-                        description: 'There is an existing account with this email',
-                    });
-                    return;
-                }
-                setToken(res.jwt);
-            });
-    };
+    const formVerification = () => {};
 
     // Styles
     const useStyles = makeStyles({
@@ -166,23 +88,12 @@ function AuthForm({ toggleRegisterForm, setToken }: Props): JSX.Element {
 
     return (
         <div className="form-overlay">
-            <div className="form-container auth-form">
-                <i className="form-delete-btn" onClick={toggleRegisterForm}>
+            <div className="form-container login-form">
+                <i className="form-delete-btn" onClick={toggleLoginForm}>
                     <Close />
                 </i>
                 <form className="wishlist-form">
-                    <h1 className="form-title">Register</h1>
-                    <TextField
-                        required
-                        label="Full Name"
-                        type="text"
-                        inputProps={{ maxLength: 50 }}
-                        value={values.name}
-                        onChange={handleNameChange}
-                        error={nameErrors.error}
-                        helperText={nameErrors.description}
-                    />
-
+                    <h1 className="form-title">Login</h1>
                     <TextField
                         required
                         type="text"
@@ -260,7 +171,7 @@ function AuthForm({ toggleRegisterForm, setToken }: Props): JSX.Element {
                     </FormControl>
                 </form>
                 <button className="primary-btn form-btn" onClick={formVerification}>
-                    Register
+                    Login
                 </button>
             </div>
         </div>
@@ -269,9 +180,8 @@ function AuthForm({ toggleRegisterForm, setToken }: Props): JSX.Element {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        toggleRegisterForm: () => dispatch({ type: actions.SHOW_REGISTER_FORM }),
-        setToken: (token: string) => dispatch({ type: actions.ACCOUNT_REGISTRATION, token: token }),
+        toggleLoginForm: () => dispatch(actions.showLoginForm()),
     };
 };
 
-export default connect(null, mapDispatchToProps)(AuthForm);
+export default connect(null, mapDispatchToProps)(LoginForm);

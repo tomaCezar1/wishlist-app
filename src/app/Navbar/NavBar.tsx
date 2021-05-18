@@ -4,15 +4,21 @@ import Settings from '@material-ui/icons/SettingsOutlined';
 import Notifications from '@material-ui/icons/NotificationsOutlined';
 import { Avatar } from '@material-ui/core';
 
-import * as actions from '../../store/actions/actionTypes';
+import * as actions from '../../store/actions/actions';
 
 interface Props {
     isLoggedIn: boolean;
-    toggleForm: () => void;
+    toggleWishlistForm: () => void;
     toggleRegisterForm: () => void;
+    toggleLoginForm: () => void;
 }
 
-function NavBar({ isLoggedIn, toggleForm, toggleRegisterForm }: Props): JSX.Element {
+function NavBar({
+    isLoggedIn,
+    toggleWishlistForm,
+    toggleRegisterForm,
+    toggleLoginForm,
+}: Props): JSX.Element {
     return (
         <nav className={`${isLoggedIn ? 'navbar' : 'nav-landing-container'}`}>
             {isLoggedIn ? (
@@ -22,7 +28,7 @@ function NavBar({ isLoggedIn, toggleForm, toggleRegisterForm }: Props): JSX.Elem
                         <h1 className="nav-title">Your Dashboard</h1>
                     </div>
                     <div className="navbar-btn-wrapper">
-                        <button className="primary-btn nav-btn" onClick={toggleForm}>
+                        <button className="primary-btn nav-btn" onClick={toggleWishlistForm}>
                             New Wishlist
                         </button>
                         <div className="nav-quick-access">
@@ -46,7 +52,9 @@ function NavBar({ isLoggedIn, toggleForm, toggleRegisterForm }: Props): JSX.Elem
                         >
                             Register
                         </button>
-                        <button className="primary-btn nav-btn login-btn">Login</button>
+                        <button className="primary-btn nav-btn login-btn" onClick={toggleLoginForm}>
+                            Login
+                        </button>
                     </div>
                 </>
             )}
@@ -56,8 +64,9 @@ function NavBar({ isLoggedIn, toggleForm, toggleRegisterForm }: Props): JSX.Elem
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        toggleForm: () => dispatch({ type: actions.SHOW_CREATE_WISHLIST_FORM }),
-        toggleRegisterForm: () => dispatch({ type: actions.SHOW_REGISTER_FORM }),
+        toggleWishlistForm: () => dispatch(actions.showWishlistForm()),
+        toggleRegisterForm: () => dispatch(actions.showRegisterForm()),
+        toggleLoginForm: () => dispatch(actions.showLoginForm()),
     };
 };
 

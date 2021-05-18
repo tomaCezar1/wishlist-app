@@ -1,6 +1,6 @@
-import { PostWishlistData } from './interfaces';
+import { PostWishlistData, RegisterCredentials, LoginCredentials } from './interfaces';
 
-export const url = 'https://wishlist-service-qa.herokuapp.com/api';
+export const url = 'https://wishlist-service-dev.herokuapp.com/api';
 
 export function createWishlist(data: PostWishlistData, token: string) {
     return fetch(`${url}/wishlists`, {
@@ -28,18 +28,22 @@ export function deleteWishlist(id: number) {
     }).then((res) => res.json());
 }
 
-export function registerUser(authData) {
+export function registerUser(registerData: RegisterCredentials) {
     return fetch(`${url}/auth/register`, {
         method: 'POST',
         headers: {
             'Content-type': 'application/json',
         },
-        body: JSON.stringify(authData),
-        // eslint-disable-next-line prettier/prettier
+        body: JSON.stringify(registerData),
     });
+}
 
-    // .then((res) => console.log(res));
-    // .catch((e) => {
-    //     throw new Error(e);
-    // });
+export function loginUser(loginData: LoginCredentials) {
+    return fetch(`${url}/auth/login`, {
+        method: 'POST',
+        headers: {
+            'Content-type': 'application/json',
+        },
+        body: JSON.stringify(loginData),
+    });
 }
