@@ -12,7 +12,7 @@ function* getWishlistsSaga() {
             throw new Error(e);
         })
     );
-    yield put({ type: actions.UPDATE_WISHLISTS, wishlists: wishlists });
+    yield put({ type: actions.UPDATE_STORE_WISHLISTS, wishlists });
 }
 
 function* deleteWishlistSaga(action) {
@@ -24,7 +24,7 @@ function* deleteWishlistSaga(action) {
 
 function* createWishlistSaga(action) {
     const token = yield select(getToken);
-    yield createWishlist(action.wishlists, token);
+    yield createWishlist(action.wishlist, token);
     yield getWishlistsSaga();
 }
 

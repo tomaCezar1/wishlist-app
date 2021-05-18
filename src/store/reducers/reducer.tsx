@@ -1,44 +1,45 @@
 import * as actions from '../actions/actionTypes';
+import { AppState } from '../../utils/interfaces';
 
-interface InitialState {
-    showForm: boolean;
-    registerForm: boolean;
-    allWishlists: { id: number; title: string; wishListDate: string }[];
-    isLoggedIn: boolean;
-    token: string;
-}
-
-const initialState: InitialState = {
-    showForm: false,
-    registerForm: false,
+const initialState: AppState = {
+    showWishlistForm: false,
+    showRegisterForm: false,
+    showLoginForm: false,
     allWishlists: [],
     isLoggedIn: false,
     token: '',
 };
 
 const reducer = (state = initialState, action) => {
-    if (action.type === actions.SHOW_CREATE_WISHLIST_FORM) {
+    if (action.type === actions.SHOW_WISHLIST_FORM) {
         return {
             ...state,
-            showForm: !state.showForm,
+            showWishlistForm: !state.showWishlistForm,
         };
     }
 
     if (action.type === actions.SHOW_REGISTER_FORM) {
         return {
             ...state,
-            registerForm: !state.registerForm,
+            showRegisterForm: !state.showRegisterForm,
         };
     }
 
-    if (action.type === actions.UPDATE_WISHLISTS) {
+    if (action.type === actions.SHOW_LOGIN_FORM) {
+        return {
+            ...state,
+            showLoginForm: !state.showLoginForm,
+        };
+    }
+
+    if (action.type === actions.UPDATE_STORE_WISHLISTS) {
         return {
             ...state,
             allWishlists: action.wishlists,
         };
     }
 
-    if (action.type === actions.ACCOUNT_REGISTRATION) {
+    if (action.type === actions.REGISTER) {
         return {
             ...state,
             token: action.token,
