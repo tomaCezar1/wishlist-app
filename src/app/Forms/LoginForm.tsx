@@ -24,7 +24,6 @@ interface Props {
 interface LoginState {
     email: string;
     password: string;
-    confirmPassword: string;
     showPassword: boolean;
 }
 
@@ -38,7 +37,6 @@ function LoginForm({ toggleLoginForm }: Props): JSX.Element {
     const [values, setValues] = useState<LoginState>({
         email: '',
         password: '',
-        confirmPassword: '',
         showPassword: false,
     });
 
@@ -52,11 +50,6 @@ function LoginForm({ toggleLoginForm }: Props): JSX.Element {
         description: ' ',
     });
 
-    const [confirmPasswordErrors, setConfirmPasswordErrors] = useState<Errors>({
-        error: false,
-        description: ' ',
-    });
-
     // Handlers
     const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setValues({ ...values, email: event.target.value });
@@ -64,10 +57,6 @@ function LoginForm({ toggleLoginForm }: Props): JSX.Element {
 
     const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setValues({ ...values, password: event.target.value });
-    };
-
-    const handleConfirmPasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setValues({ ...values, confirmPassword: event.target.value });
     };
 
     const handleClickShowPassword = () => {
@@ -135,38 +124,6 @@ function LoginForm({ toggleLoginForm }: Props): JSX.Element {
                             error={passwordErrors.error}
                             // eslint-disable-next-line react/no-children-prop
                             children={passwordErrors.description}
-                        />
-                    </FormControl>
-
-                    <FormControl required className={classes.marginTop}>
-                        <InputLabel
-                            error={confirmPasswordErrors.error}
-                            htmlFor="standard-adornment-confirmationPassword"
-                        >
-                            Confirm Password
-                        </InputLabel>
-                        <Input
-                            id="standard-adornment-confirmationPassword"
-                            type={values.showPassword ? 'text' : 'password'}
-                            value={values.confirmPassword}
-                            onChange={handleConfirmPasswordChange}
-                            error={confirmPasswordErrors.error}
-                            inputProps={{ maxLength: 25 }}
-                            endAdornment={
-                                <InputAdornment position="end">
-                                    <IconButton
-                                        aria-label="toggle password visibility"
-                                        onClick={handleClickShowPassword}
-                                    >
-                                        {values.showPassword ? <Visibility /> : <VisibilityOff />}
-                                    </IconButton>
-                                </InputAdornment>
-                            }
-                        />
-                        <FormHelperText
-                            error={confirmPasswordErrors.error}
-                            // eslint-disable-next-line react/no-children-prop
-                            children={confirmPasswordErrors.description}
                         />
                     </FormControl>
                 </form>
