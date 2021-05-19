@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Head from 'next/head';
-import { useRouter } from 'next/router';
 
 import { Provider } from 'react-redux';
 import { createStore, applyMiddleware } from 'redux';
@@ -35,11 +34,6 @@ function MyApp(props) {
     // Routing
     const storeState = store.getState();
     const loginState = storeState.isLoggedIn;
-
-    const router = useRouter();
-    if (typeof window !== 'undefined' && !loginState && router.pathname.startsWith('/dashboard')) {
-        router.push('/');
-    }
 
     const ComponentToRender = loginState ? Component : Home;
 

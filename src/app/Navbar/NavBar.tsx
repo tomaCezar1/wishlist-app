@@ -18,7 +18,7 @@ interface Props {
     toggleWishlistForm: () => void;
     toggleRegisterForm: () => void;
     toggleLoginForm: () => void;
-    logout: () => void;
+    logoutUser: () => void;
 }
 
 function NavBar({
@@ -27,13 +27,18 @@ function NavBar({
     toggleWishlistForm,
     toggleRegisterForm,
     toggleLoginForm,
-    logout,
+    logoutUser,
 }: Props): JSX.Element {
     // eslint-disable-next-line prettier/prettier
     const [open, setOpen] = useState(false);
 
     const toggleDialog = () => {
         setOpen(!open);
+    };
+
+    const logout = () => {
+        logoutUser();
+        setOpen(false);
     };
 
     return (
@@ -71,7 +76,7 @@ function NavBar({
                         aria-labelledby="alert-dialog-title"
                         aria-describedby="alert-dialog-description"
                     >
-                        <DialogTitle>Are you sure you want to delete this wishlist?</DialogTitle>
+                        <DialogTitle>Are you sure you want to log out?</DialogTitle>
                         <DialogActions>
                             <Button
                                 onClick={toggleDialog}
@@ -127,7 +132,7 @@ const mapDispatchToProps = (dispatch) => {
         toggleWishlistForm: () => dispatch(actions.showWishlistForm()),
         toggleRegisterForm: () => dispatch(actions.showRegisterForm()),
         toggleLoginForm: () => dispatch(actions.showLoginForm()),
-        logout: () => dispatch(actions.logout()),
+        logoutUser: () => dispatch(actions.logout()),
     };
 };
 
