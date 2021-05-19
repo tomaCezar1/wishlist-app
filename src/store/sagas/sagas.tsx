@@ -1,9 +1,10 @@
 import { put, takeLatest, all, select } from 'redux-saga/effects';
 
 import { createWishlist, deleteWishlist, getWishlists } from '../../utils/httpRequests';
+import { AppState } from '../../utils/interfaces';
 import * as actions from '../actions/actionTypes';
 
-const getToken = (state) => state.token;
+const getToken = (state: AppState) => state.token;
 
 function* getWishlistsSaga() {
     const token = yield select(getToken);
@@ -32,6 +33,7 @@ function* watchSagas() {
     yield all([
         takeLatest(actions.DELETE_WISHLIST, deleteWishlistSaga),
         takeLatest(actions.CREATE_WISHLIST, createWishlistSaga),
+        takeLatest(actions.AUTHENTICATE, getWishlistsSaga),
     ]);
 }
 

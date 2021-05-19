@@ -19,7 +19,7 @@ import { registerUser } from '../../utils/httpRequests';
 
 interface Props {
     toggleRegisterForm: () => void;
-    setToken: (token: string) => void;
+    register: (token: string, name: string) => void;
 }
 
 interface State {
@@ -35,7 +35,7 @@ interface Errors {
     description: string;
 }
 
-function RegisterForm({ toggleRegisterForm, setToken }: Props): JSX.Element {
+function RegisterForm({ toggleRegisterForm, register }: Props): JSX.Element {
     // State
     const [values, setValues] = useState<State>({
         name: '',
@@ -131,14 +131,14 @@ function RegisterForm({ toggleRegisterForm, setToken }: Props): JSX.Element {
     };
 
     const registerRequest = () => {
-        const authData: RegisterCredentials = {
+        const registrationData: RegisterCredentials = {
             fullName: values.name,
             username: values.email,
             password: values.password,
             confirmPassword: values.confirmPassword,
         };
 
-        registerUser(authData)
+        registerUser(registrationData)
             .then((res) => res.json())
             .then((res) => {
                 if (res.status === 409) {
@@ -148,7 +148,9 @@ function RegisterForm({ toggleRegisterForm, setToken }: Props): JSX.Element {
                     });
                     return;
                 }
-                setToken(res.jwt);
+                const token = res.jwt;
+                const name = res.fullName;
+                register(token, name);
             });
     };
 
@@ -267,7 +269,7 @@ function RegisterForm({ toggleRegisterForm, setToken }: Props): JSX.Element {
 const mapDispatchToProps = (dispatch) => {
     return {
         toggleRegisterForm: () => dispatch(actions.showRegisterForm()),
-        setToken: (token: string) => dispatch(actions.register(token)),
+        register: (token: string, name: string) => dispatch(actions.authenticate(token, name)),
     };
 };
 
