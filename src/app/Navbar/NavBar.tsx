@@ -1,8 +1,13 @@
+import { useState } from 'react';
 import { connect } from 'react-redux';
 
 import Settings from '@material-ui/icons/SettingsOutlined';
 import Notifications from '@material-ui/icons/NotificationsOutlined';
 import { Avatar } from '@material-ui/core';
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogTitle from '@material-ui/core/DialogTitle';
 
 import * as actions from '../../store/actions/actions';
 import { AppState } from '../../utils/interfaces';
@@ -13,6 +18,7 @@ interface Props {
     toggleWishlistForm: () => void;
     toggleRegisterForm: () => void;
     toggleLoginForm: () => void;
+    logout: () => void;
 }
 
 function NavBar({
@@ -21,7 +27,15 @@ function NavBar({
     toggleWishlistForm,
     toggleRegisterForm,
     toggleLoginForm,
+    logout,
 }: Props): JSX.Element {
+    // eslint-disable-next-line prettier/prettier
+    const [open, setOpen] = useState(false);
+
+    const toggleDialog = () => {
+        setOpen(!open);
+    };
+
     return (
         <nav className={`${isLoggedIn ? 'navbar' : 'nav-landing-container'}`}>
             {isLoggedIn ? (
@@ -31,8 +45,19 @@ function NavBar({
                         <h1 className="nav-title">Your Dashboard</h1>
                     </div>
                     <div className="navbar-btn-wrapper">
-                        <button className="primary-btn nav-btn" onClick={toggleWishlistForm}>
+                        <button
+                            id="navbar-wishlist-btn"
+                            className="primary-btn nav-btn"
+                            onClick={toggleWishlistForm}
+                        >
                             New Wishlist
+                        </button>
+                        <button
+                            id="navbar-logout-btn"
+                            className="primary-btn logout-btn"
+                            onClick={toggleDialog}
+                        >
+                            Log out
                         </button>
                         <div className="nav-quick-access">
                             <Settings className="nav-icons" />
@@ -40,6 +65,32 @@ function NavBar({
                             <Avatar alt="Guest Image" className="nav-avatar" />
                         </div>
                     </div>
+                    <Dialog
+                        open={open}
+                        onClose={toggleDialog}
+                        aria-labelledby="alert-dialog-title"
+                        aria-describedby="alert-dialog-description"
+                    >
+                        <DialogTitle>Are you sure you want to delete this wishlist?</DialogTitle>
+                        <DialogActions>
+                            <Button
+                                onClick={toggleDialog}
+                                id="cancel-btn"
+                                className="dialog-btn"
+                                color="primary"
+                            >
+                                Cancel
+                            </Button>
+                            <Button
+                                onClick={logout}
+                                id="continue-btn"
+                                className="dialog-btn"
+                                color="primary"
+                            >
+                                Continue
+                            </Button>
+                        </DialogActions>
+                    </Dialog>
                 </>
             ) : (
                 <>
@@ -76,6 +127,7 @@ const mapDispatchToProps = (dispatch) => {
         toggleWishlistForm: () => dispatch(actions.showWishlistForm()),
         toggleRegisterForm: () => dispatch(actions.showRegisterForm()),
         toggleLoginForm: () => dispatch(actions.showLoginForm()),
+        logout: () => dispatch(actions.logout()),
     };
 };
 

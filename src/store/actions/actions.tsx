@@ -9,6 +9,12 @@ export const authenticate = (token: string, username: string) => {
     };
 };
 
+export const logout = () => {
+    return {
+        type: actions.LOGOUT,
+    };
+};
+
 export const showWishlistForm = () => {
     return {
         type: actions.SHOW_WISHLIST_FORM,

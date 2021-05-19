@@ -60,7 +60,20 @@ header {
 .nav-btn {
     position: relative;
     top: 0;
-    margin-right: 40px;
+    margin-right: 20px;
+    width: 160px;
+    height: 42px;
+    align-self: flex-end;
+    transition: all 0.3s ease-in-out;
+    &:hover {
+        top: -5px;
+    }
+}
+
+.logout-btn {
+    position: relative;
+    top: 0;
+    margin-right: 30px;
     width: 160px;
     height: 42px;
     align-self: flex-end;

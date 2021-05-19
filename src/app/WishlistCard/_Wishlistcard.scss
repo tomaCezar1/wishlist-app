@@ -60,7 +60,7 @@
     border: 1px solid $greyLight;
     color: $grey;
     background-color: $white;
-    font-weight: 600;
+    font-weight: 500;
     font-size: 14px;
     text-transform: capitalize;
     cursor: pointer;
@@ -86,7 +86,7 @@
     border: 1px solid $primary;
     text-transform: capitalize;
     font-size: 14px;
-    font-weight: 600;
+    font-weight: 500;
     cursor: pointer;
     transition: all 0.3s ease-in-out;
 
@@ -141,5 +141,5 @@
 
 .dialog-btn {
     transition: all 0.3s ease-in-out !important;
-    font-weight: $bold !important;
+    font-weight: $medium !important;
 }
