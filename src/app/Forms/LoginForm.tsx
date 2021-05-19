@@ -19,6 +19,7 @@ import { makeStyles } from '@material-ui/core/styles';
 
 interface Props {
     toggleLoginForm: () => void;
+    login: (token: string, username: string) => void;
 }
 
 interface LoginState {
@@ -32,7 +33,7 @@ interface Errors {
     description: string;
 }
 
-function LoginForm({ toggleLoginForm }: Props): JSX.Element {
+function LoginForm({ toggleLoginForm, login }: Props): JSX.Element {
     // State
     const [values, setValues] = useState<LoginState>({
         email: '',
@@ -46,6 +47,11 @@ function LoginForm({ toggleLoginForm }: Props): JSX.Element {
     });
 
     const [passwordErrors, setPasswordErrors] = useState<Errors>({
+        error: false,
+        description: ' ',
+    });
+
+    const [unauthorizedError, setUnauthorizedError] = useState<Errors>({
         error: false,
         description: ' ',
     });
@@ -64,7 +70,54 @@ function LoginForm({ toggleLoginForm }: Props): JSX.Element {
     };
 
     // Form verification
-    const formVerification = () => {};
+    const formVerification = () => {
+        const emailInvalid = !/^[^@]+@\w+(\.\w+)+\w$/.test(values.email);
+        const passwordInvalid = values.password.length < 1 || values.password.length < 8;
+
+        // Email verification
+        emailInvalid
+            ? setEmailErrors({
+                  error: true,
+                  description: 'Please enter a valid email address',
+              })
+            : setEmailErrors({ error: false, description: ' ' });
+
+        //Password verification
+        if (values.password.length < 1) {
+            setPasswordErrors({ error: true, description: 'Please enter a password' });
+        } else if (values.password.length < 8) {
+            setPasswordErrors({ error: true, description: 'The password is too short' });
+        } else setPasswordErrors({ error: false, description: ' ' });
+
+        if (!emailInvalid && !passwordInvalid) {
+            loginRequest();
+        }
+    };
+
+    const loginRequest = () => {
+        const loginData: LoginCredentials = {
+            username: values.email,
+            password: values.password,
+        };
+
+        loginUser(loginData)
+            .then((res) => res.json())
+            .then((res) => {
+                if (res.status === 401) {
+                    setUnauthorizedError({ error: true, description: 'Wrong email or password' });
+                    setEmailErrors({ error: true, description: ' ' });
+                    setPasswordErrors({ error: true, description: ' ' });
+                    return;
+                } else {
+                    setUnauthorizedError({ error: false, description: ' ' });
+                }
+
+                const token = res.jwt;
+                const username = res.fullName;
+                login(token, username);
+                toggleLoginForm();
+            });
+    };
 
     // Styles
     const useStyles = makeStyles({
@@ -78,7 +131,7 @@ function LoginForm({ toggleLoginForm }: Props): JSX.Element {
     return (
         <div className="form-overlay">
             <div className="form-container login-form">
-                <i className="form-delete-btn" onClick={toggleLoginForm}>
+                <i className="form-delete-btn" id="login-close-btn" onClick={toggleLoginForm}>
                     <Close />
                 </i>
                 <form className="wishlist-form">
@@ -87,6 +140,7 @@ function LoginForm({ toggleLoginForm }: Props): JSX.Element {
                         required
                         type="text"
                         label="Email"
+                        id="login-email-input"
                         className={classes.marginTop}
                         inputProps={{ maxLength: 40 }}
                         value={values.email}
@@ -103,7 +157,7 @@ function LoginForm({ toggleLoginForm }: Props): JSX.Element {
                             Password
                         </InputLabel>
                         <Input
-                            id="standard-adornment-password"
+                            id="login-password-input"
                             type={values.showPassword ? 'text' : 'password'}
                             value={values.password}
                             error={passwordErrors.error}
@@ -126,8 +180,9 @@ function LoginForm({ toggleLoginForm }: Props): JSX.Element {
                             children={passwordErrors.description}
                         />
                     </FormControl>
+                    <p id="login-credentials-error">{unauthorizedError.description}</p>
                 </form>
-                <button className="primary-btn form-btn" onClick={formVerification}>
+                <button className="primary-btn form-btn" id="login-btn" onClick={formVerification}>
                     Login
                 </button>
             </div>
@@ -138,6 +193,7 @@ function LoginForm({ toggleLoginForm }: Props): JSX.Element {
 const mapDispatchToProps = (dispatch) => {
     return {
         toggleLoginForm: () => dispatch(actions.showLoginForm()),
+        login: (token: string, username: string) => dispatch(actions.authenticate(token, username)),
     };
 };
 

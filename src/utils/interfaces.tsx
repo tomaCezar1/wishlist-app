@@ -1,4 +1,5 @@
 export interface AppState {
+    username: string;
     showWishlistForm: boolean;
     showRegisterForm: boolean;
     showLoginForm: boolean;
@@ -25,5 +26,4 @@ export interface RegisterCredentials {
 export interface LoginCredentials {
     username: string;
     password: string;
-    confirmPassword: string;
 }

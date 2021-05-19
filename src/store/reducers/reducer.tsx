@@ -2,6 +2,7 @@ import * as actions from '../actions/actionTypes';
 import { AppState } from '../../utils/interfaces';
 
 const initialState: AppState = {
+    username: '',
     showWishlistForm: false,
     showRegisterForm: false,
     showLoginForm: false,
@@ -39,11 +40,12 @@ const reducer = (state = initialState, action) => {
         };
     }
 
-    if (action.type === actions.REGISTER) {
+    if (action.type === actions.AUTHENTICATE) {
         return {
             ...state,
             token: action.token,
             isLoggedIn: true,
+            username: action.username,
         };
     }
     return state;

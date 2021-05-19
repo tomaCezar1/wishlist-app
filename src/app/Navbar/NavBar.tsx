@@ -5,9 +5,11 @@ import Notifications from '@material-ui/icons/NotificationsOutlined';
 import { Avatar } from '@material-ui/core';
 
 import * as actions from '../../store/actions/actions';
+import { AppState } from '../../utils/interfaces';
 
 interface Props {
     isLoggedIn: boolean;
+    username: string;
     toggleWishlistForm: () => void;
     toggleRegisterForm: () => void;
     toggleLoginForm: () => void;
@@ -15,6 +17,7 @@ interface Props {
 
 function NavBar({
     isLoggedIn,
+    username,
     toggleWishlistForm,
     toggleRegisterForm,
     toggleLoginForm,
@@ -24,7 +27,7 @@ function NavBar({
             {isLoggedIn ? (
                 <>
                     <div className="main-heading">
-                        <h3 className="nav-greeting">Welcome back, Guest</h3>
+                        <h3 className="nav-greeting">Welcome back, {username}</h3>
                         <h1 className="nav-title">Your Dashboard</h1>
                     </div>
                     <div className="navbar-btn-wrapper">
@@ -62,6 +65,12 @@ function NavBar({
     );
 }
 
+const mapStateToProps = (state: AppState) => {
+    return {
+        username: state.username,
+    };
+};
+
 const mapDispatchToProps = (dispatch) => {
     return {
         toggleWishlistForm: () => dispatch(actions.showWishlistForm()),
@@ -70,4 +79,4 @@ const mapDispatchToProps = (dispatch) => {
     };
 };
 
-export default connect(null, mapDispatchToProps)(NavBar);
+export default connect(mapStateToProps, mapDispatchToProps)(NavBar);

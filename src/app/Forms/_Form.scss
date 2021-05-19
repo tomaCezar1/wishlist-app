@@ -70,3 +70,13 @@
 .login-form {
     max-height: 380px;
 }
+
+#login-credentials-error {
+    margin-top: -10px;
+    color: $red;
+    height: 20px;
+}
+
+#login-btn {
+    margin-top: 36px;
+}
