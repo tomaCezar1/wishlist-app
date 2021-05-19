@@ -48,6 +48,14 @@ const reducer = (state = initialState, action) => {
             username: action.username,
         };
     }
+
+    if (action.type === actions.LOGOUT) {
+        return {
+            ...state,
+            token: '',
+            isLoggedIn: false,
+        };
+    }
     return state;
 };
 

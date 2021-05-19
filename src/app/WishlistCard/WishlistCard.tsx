@@ -1,8 +1,5 @@
 import React, { useState } from 'react';
-import Router from 'next/router';
 import { connect } from 'react-redux';
-
-import { url } from '../../utils/httpRequests';
 
 import Time from '@material-ui/icons/AccessTime';
 import Close from '@material-ui/icons/Close';
@@ -11,17 +8,20 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
-function Wishlistcard(props): JSX.Element {
+interface Props {
+    id: number;
+    date: string;
+    title: string;
+    handleDeleteRequest: (id: number) => void;
+}
+
+function Wishlistcard(props: Props): JSX.Element {
     const { id, title, date, handleDeleteRequest } = props;
 
     const [open, setOpen] = useState(false);
 
-    const handleClickOpen = () => {
-        setOpen(true);
-    };
-
-    const handleClose = () => {
-        setOpen(false);
+    const toggleDialog = () => {
+        setOpen(!open);
     };
 
     return (
@@ -37,19 +37,19 @@ function Wishlistcard(props): JSX.Element {
                 <button className="card-btn primary-btn">Add</button>
                 <button className="card-btn grey-btn">Edit</button>
             </div>
-            <i className="card-delete-btn" onClick={handleClickOpen}>
+            <i className="card-delete-btn" onClick={toggleDialog}>
                 <Close />
             </i>
             <Dialog
                 open={open}
-                onClose={handleClose}
+                onClose={toggleDialog}
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description"
             >
-                <DialogTitle>Are you sure you want to delete this wishlist?</DialogTitle>
+                <DialogTitle>Are you sure you want to log out??</DialogTitle>
                 <DialogActions>
                     <Button
-                        onClick={handleClose}
+                        onClick={toggleDialog}
                         id="cancel-btn"
                         className="dialog-btn"
                         color="primary"
@@ -72,7 +72,7 @@ function Wishlistcard(props): JSX.Element {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        handleDeleteRequest: (id) => dispatch({ type: 'DELETE_WISHLIST', id: id }),
+        handleDeleteRequest: (id: number) => dispatch({ type: 'DELETE_WISHLIST', id: id }),
     };
 };
 
