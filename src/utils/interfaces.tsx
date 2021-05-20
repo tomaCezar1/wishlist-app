@@ -6,10 +6,11 @@ export interface AppState {
     allWishlists: { id: number; title: string; wishListDate: string }[];
     isLoggedIn: boolean;
     token: string;
+    editWishlistId: number;
 }
 
 export interface PostWishlistData {
-    description: string;
+    wishlistDescription: string;
     eventType: string;
     privacyType: string;
     title: string;

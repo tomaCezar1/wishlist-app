@@ -175,6 +175,7 @@ function RegisterForm({ toggleRegisterForm, register }: Props): JSX.Element {
                         required
                         label="Full Name"
                         type="text"
+                        id="registration-full-name"
                         inputProps={{ maxLength: 50 }}
                         value={values.name}
                         onChange={handleNameChange}
@@ -186,6 +187,7 @@ function RegisterForm({ toggleRegisterForm, register }: Props): JSX.Element {
                         required
                         type="text"
                         label="Email"
+                        id="registration-email"
                         className={classes.marginTop}
                         inputProps={{ maxLength: 40 }}
                         value={values.email}

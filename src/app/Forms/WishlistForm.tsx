@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 
 import TextField from '@material-ui/core/TextField';
@@ -7,9 +7,26 @@ import { makeStyles } from '@material-ui/core/styles';
 import Close from '@material-ui/icons/Close';
 
 import * as actions from '../../store/actions/actions';
-import { PostWishlistData } from '../../utils/interfaces';
+import { AppState, PostWishlistData } from '../../utils/interfaces';
+import { getWishlistById } from '../../utils/httpRequests';
 
-function WishlistForm({ toggleForm, createWishlist }): JSX.Element {
+interface Props {
+    toggleForm: () => void;
+    createWishlist: (postData: PostWishlistData) => void;
+    token: string;
+    editWishlistId: number;
+    update: boolean;
+    updateWishlist: (id: number, postData: PostWishlistData) => void;
+}
+
+function WishlistForm({
+    toggleForm,
+    createWishlist,
+    updateWishlist,
+    editWishlistId,
+    token,
+    update,
+}: Props): JSX.Element {
     const todayDate: Date = new Date();
     const formattedDate: string = todayDate.toISOString().split('T')[0];
 
@@ -24,6 +41,9 @@ function WishlistForm({ toggleForm, createWishlist }): JSX.Element {
     const [description, setDescription] = useState('');
     const [wishlistDate, setWishlistDate] = useState(formattedDate);
     const [privacyType, setPrivacyType] = useState('Private');
+
+    const wishlistOptions = ['None', 'Birthday', 'Wedding', 'Other'];
+    const privacyOptions = ['Private', 'Public'];
 
     // Event Handlers
     const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -46,17 +66,56 @@ function WishlistForm({ toggleForm, createWishlist }): JSX.Element {
         setDescription(event.target.value);
     };
 
-    const wishlistOptions = ['None', 'Birthday', 'Wedding', 'Other'];
-    const privacyOptions = ['Private', 'Public'];
+    // Form Request
+    const postRequest = (update = false) => {
+        const privacyTypeUppercase = privacyType.toUpperCase();
+        const eventTypeUppercase = eventType.toUpperCase();
+        const formattedDateforRequest = wishlistDate.concat('T00:00:00');
 
-    const useStyles = makeStyles({
-        input: {
-            marginTop: 20,
-            borderRadius: 20,
-        },
-    });
+        const postData: PostWishlistData = {
+            title,
+            eventType: eventTypeUppercase,
+            wishlistDescription: description,
+            wishListDate: formattedDateforRequest,
+            privacyType: privacyTypeUppercase,
+        };
 
-    const classes = useStyles();
+        update ? updateWishlist(editWishlistId, postData) : createWishlist(postData);
+    };
+
+    function capitalizeString(str: string) {
+        const lowerCaseStr = str.toLowerCase();
+        return lowerCaseStr.charAt(0).toUpperCase() + lowerCaseStr.slice(1);
+    }
+
+    const getWishlistData = (id: number) => {
+        getWishlistById(token, id)
+            .then((res) => res.json())
+            .then((res) => {
+                const date = res.wishListDate.split('T')[0];
+                const todayDate: Date = new Date(date);
+                const formattedDate: string = todayDate.toISOString().split('T')[0];
+
+                const capitalizedEventType: string = capitalizeString(res.eventType);
+                const capitalizedPrivacyType: string = capitalizeString(res.privacyType);
+
+                const stringifiedDescription: string = !res.wishlistDescription
+                    ? ''
+                    : res.wishlistDescription;
+
+                setTitle(res.title);
+                setEventType(capitalizedEventType);
+                setPrivacyType(capitalizedPrivacyType);
+                setDescription(stringifiedDescription);
+                setWishlistDate(formattedDate);
+            });
+    };
+
+    useEffect(() => {
+        {
+            update ? getWishlistData(editWishlistId) : null;
+        }
+    }, [update]);
 
     // Form Verification
     const formVerification = () => {
@@ -74,28 +133,26 @@ function WishlistForm({ toggleForm, createWishlist }): JSX.Element {
         setTitleError(!titleValid);
         setTypeError(!eventTypeValid);
 
-        if (titleValid && eventTypeValid) {
-            formRequest();
+        if (!update && titleValid && eventTypeValid) {
+            postRequest();
+            toggleForm();
+        }
+
+        if (update && titleValid && eventTypeValid) {
+            postRequest(update);
             toggleForm();
         }
     };
 
-    // Form Request
-    const formRequest = () => {
-        const privacyTypeUppercase = privacyType.toUpperCase();
-        const eventTypeUppercase = eventType.toUpperCase();
-        const formattedDateforRequest = wishlistDate.concat('T00:00:00');
+    // Styles
+    const useStyles = makeStyles({
+        input: {
+            marginTop: 20,
+            borderRadius: 20,
+        },
+    });
 
-        const postData: PostWishlistData = {
-            title,
-            eventType: eventTypeUppercase,
-            description,
-            wishListDate: formattedDateforRequest,
-            privacyType: privacyTypeUppercase,
-        };
-
-        createWishlist(postData);
-    };
+    const classes = useStyles();
 
     return (
         <div className="form-overlay">
@@ -104,12 +161,13 @@ function WishlistForm({ toggleForm, createWishlist }): JSX.Element {
                     <Close />
                 </i>
                 <form className="wishlist-form">
-                    <h1 className="form-title">Create Wishlist</h1>
+                    <h1 className="form-title">{update ? 'Update Wishlist' : 'Create Wishlist'}</h1>
                     <TextField
                         required
                         error={titleError}
                         label="Wishlist Title"
                         value={title}
+                        id="wishlist-form-title"
                         inputProps={{ maxLength: 25 }}
                         onChange={handleTitleChange}
                         helperText={titleErrorDescription}
@@ -121,6 +179,7 @@ function WishlistForm({ toggleForm, createWishlist }): JSX.Element {
                         select
                         required
                         label="Wishlist Type"
+                        id="wishlist-form-type"
                         error={typeError}
                         value={eventType}
                         className={classes.input}
@@ -135,6 +194,7 @@ function WishlistForm({ toggleForm, createWishlist }): JSX.Element {
                     </TextField>
                     <TextField
                         multiline
+                        id="wishlist-form-description"
                         className={classes.input}
                         label="Description"
                         variant="filled"
@@ -147,6 +207,7 @@ function WishlistForm({ toggleForm, createWishlist }): JSX.Element {
                         className={classes.input}
                         label="Date"
                         type="date"
+                        id="wishlist-form-date"
                         onChange={handleDateChange}
                         value={wishlistDate}
                         InputLabelProps={{
@@ -156,6 +217,7 @@ function WishlistForm({ toggleForm, createWishlist }): JSX.Element {
                     <TextField
                         select
                         required
+                        id="wishlist-form-privacy"
                         label="Privacy Type"
                         className={classes.input}
                         value={privacyType}
@@ -168,19 +230,32 @@ function WishlistForm({ toggleForm, createWishlist }): JSX.Element {
                         ))}
                     </TextField>
                 </form>
-                <button className="primary-btn form-btn" onClick={formVerification}>
-                    Add Wishlist
+                <button
+                    className="primary-btn form-btn"
+                    id="wishlist-form-btn"
+                    onClick={formVerification}
+                >
+                    {update ? 'Save Changes' : 'Add Wishlist'}
                 </button>
             </div>
         </div>
     );
 }
 
+const mapStateToProps = (state: AppState) => {
+    return {
+        editWishlistId: state.editWishlistId,
+        token: state.token,
+    };
+};
+
 const mapDispatchToProps = (dispatch) => {
     return {
         toggleForm: () => dispatch(actions.showWishlistForm()),
         createWishlist: (wishlist: PostWishlistData) => dispatch(actions.createWishlist(wishlist)),
+        updateWishlist: (id: number, postData: PostWishlistData) =>
+            dispatch(actions.updateWishlist(id, postData)),
     };
 };
 
-export default connect(null, mapDispatchToProps)(WishlistForm);
+export default connect(mapStateToProps, mapDispatchToProps)(WishlistForm);

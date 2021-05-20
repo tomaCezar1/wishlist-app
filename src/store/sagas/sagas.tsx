@@ -1,6 +1,11 @@
 import { put, takeLatest, all, select } from 'redux-saga/effects';
 
-import { createWishlist, deleteWishlist, getWishlists } from '../../utils/httpRequests';
+import {
+    createWishlist,
+    deleteWishlist,
+    getWishlists,
+    updateWishlist,
+} from '../../utils/httpRequests';
 import { AppState } from '../../utils/interfaces';
 import * as actions from '../actions/actionTypes';
 
@@ -17,7 +22,8 @@ function* getWishlistsSaga() {
 }
 
 function* deleteWishlistSaga(action) {
-    yield deleteWishlist(action.id).catch((e) => {
+    const token = yield select(getToken);
+    yield deleteWishlist(token, action.id).catch((e) => {
         throw new Error(e);
     });
     yield getWishlistsSaga();
@@ -25,7 +31,17 @@ function* deleteWishlistSaga(action) {
 
 function* createWishlistSaga(action) {
     const token = yield select(getToken);
-    yield createWishlist(action.wishlist, token);
+    yield createWishlist(action.data, token).catch((e) => {
+        throw new Error(e);
+    });
+    yield getWishlistsSaga();
+}
+
+function* updateWishlistSaga(action) {
+    const token = yield select(getToken);
+    yield updateWishlist(token, action.id, action.data).catch((e) => {
+        throw new Error(e);
+    });
     yield getWishlistsSaga();
 }
 
@@ -34,6 +50,7 @@ function* watchSagas() {
         takeLatest(actions.DELETE_WISHLIST, deleteWishlistSaga),
         takeLatest(actions.CREATE_WISHLIST, createWishlistSaga),
         takeLatest(actions.AUTHENTICATE, getWishlistsSaga),
+        takeLatest(actions.UPDATE_WISHLIST, updateWishlistSaga),
     ]);
 }
 

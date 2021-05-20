@@ -21,6 +21,7 @@ interface Props {
     showRegisterForm: boolean;
     showLoginForm: boolean;
     wishlistsFromStore: { id: number; title: string; wishListDate: string }[];
+    editWishlistId: number;
 }
 
 function MainComponent(props: Props): JSX.Element {
@@ -32,6 +33,7 @@ function MainComponent(props: Props): JSX.Element {
         showRegisterForm,
         showLoginForm,
         wishlistsFromStore,
+        editWishlistId,
     } = props;
 
     const [wishlists, setWishlists] = useState([]);
@@ -64,7 +66,9 @@ function MainComponent(props: Props): JSX.Element {
                 {isLoggedIn ? (
                     <>
                         <Dashboard wishlists={wishlists} />
-                        {showWishlistForm ? <WishlistForm /> : null}
+                        {showWishlistForm ? (
+                            <WishlistForm update={!editWishlistId ? false : true} />
+                        ) : null}
                     </>
                 ) : (
                     <>
@@ -87,12 +91,15 @@ const mapStateToProps = (state: AppState) => {
         wishlistsFromStore: state.allWishlists,
         isLoggedIn: state.isLoggedIn,
         token: state.token,
+        editWishlistId: state.editWishlistId,
     };
 };
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        updateInitialWishlists: (wishlists) => {
+        updateInitialWishlists: (
+            wishlists: { id: number; title: string; wishListDate: string }[]
+        ) => {
             dispatch(actions.updateStoreWishlists(wishlists));
         },
     };
