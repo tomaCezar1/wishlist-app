@@ -9,6 +9,7 @@ const initialState: AppState = {
     allWishlists: [],
     isLoggedIn: false,
     token: '',
+    editWishlistId: null,
 };
 
 const reducer = (state = initialState, action) => {
@@ -16,6 +17,7 @@ const reducer = (state = initialState, action) => {
         return {
             ...state,
             showWishlistForm: !state.showWishlistForm,
+            editWishlistId: null,
         };
     }
 
@@ -54,6 +56,13 @@ const reducer = (state = initialState, action) => {
             ...state,
             token: '',
             isLoggedIn: false,
+        };
+    }
+
+    if (action.type === actions.TRIGGER_UPDATE_ACTION) {
+        return {
+            ...state,
+            editWishlistId: action.id,
         };
     }
     return state;

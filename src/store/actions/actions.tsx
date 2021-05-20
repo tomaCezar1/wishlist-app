@@ -33,10 +33,10 @@ export const showLoginForm = () => {
     };
 };
 
-export const createWishlist = (wishlist: PostWishlistData) => {
+export const createWishlist = (data: PostWishlistData) => {
     return {
         type: actions.CREATE_WISHLIST,
-        wishlist,
+        data,
     };
 };
 
@@ -44,5 +44,27 @@ export const updateStoreWishlists = (wishlists) => {
     return {
         type: actions.UPDATE_STORE_WISHLISTS,
         wishlists,
+    };
+};
+
+export const triggerUpdateAction = (id: number) => {
+    return {
+        type: actions.TRIGGER_UPDATE_ACTION,
+        id,
+    };
+};
+
+export const deleteWishlist = (id: number) => {
+    return {
+        type: actions.DELETE_WISHLIST,
+        id,
+    };
+};
+
+export const updateWishlist = (id: number, data: PostWishlistData) => {
+    return {
+        type: actions.UPDATE_WISHLIST,
+        id,
+        data,
     };
 };

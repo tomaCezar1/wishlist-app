@@ -8,20 +8,29 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
+import * as actions from '../../store/actions/actions';
+
 interface Props {
     id: number;
     date: string;
     title: string;
+    toggleForm: () => void;
     handleDeleteRequest: (id: number) => void;
+    triggerUpdateAction: (id: number) => void;
 }
 
 function Wishlistcard(props: Props): JSX.Element {
-    const { id, title, date, handleDeleteRequest } = props;
+    const { id, title, date, handleDeleteRequest, triggerUpdateAction, toggleForm } = props;
 
     const [open, setOpen] = useState(false);
 
     const toggleDialog = () => {
         setOpen(!open);
+    };
+
+    const handleEdit = () => {
+        toggleForm();
+        triggerUpdateAction(id);
     };
 
     return (
@@ -35,7 +44,9 @@ function Wishlistcard(props: Props): JSX.Element {
             </div>
             <div className="button-container">
                 <button className="card-btn primary-btn">Add</button>
-                <button className="card-btn grey-btn">Edit</button>
+                <button className="card-btn grey-btn" onClick={handleEdit}>
+                    Edit
+                </button>
             </div>
             <i className="card-delete-btn" onClick={toggleDialog}>
                 <Close />
@@ -46,7 +57,7 @@ function Wishlistcard(props: Props): JSX.Element {
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description"
             >
-                <DialogTitle>Are you sure you want to log out??</DialogTitle>
+                <DialogTitle>Are you sure you want to delete this wishlist?</DialogTitle>
                 <DialogActions>
                     <Button
                         onClick={toggleDialog}
@@ -72,7 +83,9 @@ function Wishlistcard(props: Props): JSX.Element {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        handleDeleteRequest: (id: number) => dispatch({ type: 'DELETE_WISHLIST', id: id }),
+        handleDeleteRequest: (id: number) => dispatch(actions.deleteWishlist(id)),
+        toggleForm: () => dispatch(actions.showWishlistForm()),
+        triggerUpdateAction: (id: number) => dispatch(actions.triggerUpdateAction(id)),
     };
 };
 
