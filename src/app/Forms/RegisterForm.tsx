@@ -151,6 +151,7 @@ function RegisterForm({ toggleRegisterForm, register }: Props): JSX.Element {
                 const token = res.jwt;
                 const name = res.fullName;
                 register(token, name);
+                toggleRegisterForm();
             });
     };
 

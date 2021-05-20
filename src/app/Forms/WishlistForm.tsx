@@ -33,11 +33,10 @@ function WishlistForm({
     // State
     const [title, setTitle] = useState('');
     const [titleError, setTitleError] = useState(false);
-    const [titleErrorDescription, setTitleErrorDescription] = useState(
-        'Please enter your wishlist title'
-    );
+    const [titleErrorDescription, setTitleErrorDescription] = useState(' ');
     const [eventType, setEventType] = useState('None');
     const [typeError, setTypeError] = useState(false);
+    const [typeErrorDescription, setTypeErrorDescription] = useState(' ');
     const [description, setDescription] = useState('');
     const [wishlistDate, setWishlistDate] = useState(formattedDate);
     const [privacyType, setPrivacyType] = useState('Private');
@@ -122,6 +121,10 @@ function WishlistForm({
         const titleValid = /^[\sA-Za-z]*$/.test(title) && title?.trim();
         const eventTypeValid = eventType !== 'None';
 
+        setTitleError(!titleValid);
+        setTypeError(!eventTypeValid);
+
+        setTitleErrorDescription(' ');
         if (!/^[\sA-Za-z]*$/.test(title)) {
             setTitleErrorDescription('Symbols, whitespaces and numbers are not valid');
         }
@@ -130,8 +133,9 @@ function WishlistForm({
             setTitleErrorDescription('Please enter your wishlist title');
         }
 
-        setTitleError(!titleValid);
-        setTypeError(!eventTypeValid);
+        !eventTypeValid
+            ? setTypeErrorDescription('Please select wishlist type')
+            : setTypeErrorDescription(' ');
 
         if (!update && titleValid && eventTypeValid) {
             postRequest();
@@ -150,6 +154,9 @@ function WishlistForm({
             marginTop: 20,
             borderRadius: 20,
         },
+        type: {
+            marginTop: 10,
+        },
     });
 
     const classes = useStyles();
@@ -165,15 +172,15 @@ function WishlistForm({
                     <TextField
                         required
                         error={titleError}
-                        label="Wishlist Title"
                         value={title}
                         id="wishlist-form-title"
                         inputProps={{ maxLength: 25 }}
                         onChange={handleTitleChange}
                         helperText={titleErrorDescription}
-                        // InputLabelProps={{
-                        // shrink: true,
-                        // }}
+                        label="Wishlist Title"
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
                     />
                     <TextField
                         select
@@ -182,9 +189,12 @@ function WishlistForm({
                         id="wishlist-form-type"
                         error={typeError}
                         value={eventType}
-                        className={classes.input}
+                        className={classes.type}
                         onChange={handleTypeChange}
-                        helperText="Please select wishlist type"
+                        helperText={typeErrorDescription}
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
                     >
                         {wishlistOptions.map((option) => (
                             <MenuItem key={option} value={option}>
@@ -196,12 +206,15 @@ function WishlistForm({
                         multiline
                         id="wishlist-form-description"
                         className={classes.input}
-                        label="Description"
-                        variant="filled"
+                        variant="outlined"
                         rows={4}
                         inputProps={{ maxLength: 1000 }}
                         value={description}
                         onChange={handleDescriptionChange}
+                        label="Description"
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
                     />
                     <TextField
                         className={classes.input}
@@ -222,6 +235,9 @@ function WishlistForm({
                         className={classes.input}
                         value={privacyType}
                         onChange={handlePrivacyChange}
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
                     >
                         {privacyOptions.map((option) => (
                             <MenuItem key={option} value={option}>
