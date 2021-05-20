@@ -51,11 +51,6 @@ function LoginForm({ toggleLoginForm, login }: Props): JSX.Element {
         description: ' ',
     });
 
-    const [unauthorizedError, setUnauthorizedError] = useState<Errors>({
-        error: false,
-        description: ' ',
-    });
-
     // Handlers
     const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setValues({ ...values, email: event.target.value });
@@ -104,12 +99,9 @@ function LoginForm({ toggleLoginForm, login }: Props): JSX.Element {
             .then((res) => res.json())
             .then((res) => {
                 if (res.status === 401) {
-                    setUnauthorizedError({ error: true, description: 'Wrong email or password' });
                     setEmailErrors({ error: true, description: ' ' });
-                    setPasswordErrors({ error: true, description: ' ' });
+                    setPasswordErrors({ error: true, description: 'Wrong email or password' });
                     return;
-                } else {
-                    setUnauthorizedError({ error: false, description: ' ' });
                 }
 
                 const token = res.jwt;
@@ -180,7 +172,6 @@ function LoginForm({ toggleLoginForm, login }: Props): JSX.Element {
                             children={passwordErrors.description}
                         />
                     </FormControl>
-                    <p id="login-credentials-error">{unauthorizedError.description}</p>
                 </form>
                 <button className="primary-btn form-btn" id="login-btn" onClick={formVerification}>
                     Login

@@ -4,7 +4,7 @@
     left: 50%;
     transform: translate(-50%, -50%);
     width: 360px;
-    height: 640px;
+    height: 620px;
     border-radius: 20px;
     padding: 30px;
     background-color: $greyLight;
@@ -54,7 +54,7 @@
     padding: 10px;
     cursor: pointer;
     text-transform: capitalize;
-    font-weight: 600;
+    font-weight: $medium;
     font-size: 18px;
     transition: all 0.3s ease-in-out;
 
@@ -69,12 +69,6 @@
 
 .login-form {
     max-height: 380px;
-}
-
-#login-credentials-error {
-    margin-top: -10px;
-    color: $red;
-    height: 20px;
 }
 
 #login-btn {
