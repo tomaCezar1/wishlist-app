@@ -88,11 +88,14 @@ function RegisterForm({ toggleRegisterForm, register }: Props): JSX.Element {
 
     // Form verification
     const formVerification = () => {
-        const nameInvalid = values.name.length < 1;
-        const emailInvalid = !/^[^@]+@\w+(\.\w+)+\w$/.test(values.email);
-        const passwordInvalid = values.password.length < 1 || values.password.length < 8;
+        const nameInvalid = values.name.length < 1 || /^\s+$/.test(values.name);
+        const emailInvalid = !/^[^@]+@\w+(\.\w+)+\w$/.test(values.email) || /\s/.test(values.email);
+        const passwordInvalid =
+            values.password.length < 1 || values.password.length < 8 || /\s/.test(values.password);
         const confirmPasswordInvalid =
-            values.confirmPassword !== values.password || values.confirmPassword.length < 1;
+            values.confirmPassword !== values.password ||
+            values.confirmPassword.length < 1 ||
+            /\s/.test(values.password);
 
         nameInvalid
             ? setNameErrors({ error: true, description: 'Please enter a full name' })
@@ -109,9 +112,16 @@ function RegisterForm({ toggleRegisterForm, register }: Props): JSX.Element {
             setPasswordErrors({ error: true, description: 'Please enter a password' });
         } else if (values.password.length < 8) {
             setPasswordErrors({ error: true, description: 'The password is too short' });
+        } else if (/\s/.test(values.password)) {
+            setPasswordErrors({ error: true, description: 'The password contains white spaces' });
         } else setPasswordErrors({ error: false, description: ' ' });
 
-        if (values.password !== values.confirmPassword) {
+        if (/\s/.test(values.confirmPassword)) {
+            setConfirmPasswordErrors({
+                error: true,
+                description: 'The password contains white spaces',
+            });
+        } else if (values.password !== values.confirmPassword) {
             setConfirmPasswordErrors({
                 error: true,
                 description: 'Passwords do not match',

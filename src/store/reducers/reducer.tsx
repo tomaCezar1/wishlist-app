@@ -13,59 +13,57 @@ const initialState: AppState = {
 };
 
 const reducer = (state = initialState, action) => {
-    if (action.type === actions.SHOW_WISHLIST_FORM) {
-        return {
-            ...state,
-            showWishlistForm: !state.showWishlistForm,
-            editWishlistId: null,
-        };
-    }
+    switch (action.type) {
+        case actions.SHOW_WISHLIST_FORM:
+            return {
+                ...state,
+                showWishlistForm: !state.showWishlistForm,
+                editWishlistId: null,
+            };
 
-    if (action.type === actions.SHOW_REGISTER_FORM) {
-        return {
-            ...state,
-            showRegisterForm: !state.showRegisterForm,
-        };
-    }
+        case actions.SHOW_REGISTER_FORM:
+            return {
+                ...state,
+                showRegisterForm: !state.showRegisterForm,
+            };
 
-    if (action.type === actions.SHOW_LOGIN_FORM) {
-        return {
-            ...state,
-            showLoginForm: !state.showLoginForm,
-        };
-    }
+        case actions.SHOW_LOGIN_FORM:
+            return {
+                ...state,
+                showLoginForm: !state.showLoginForm,
+            };
 
-    if (action.type === actions.UPDATE_STORE_WISHLISTS) {
-        return {
-            ...state,
-            allWishlists: action.wishlists,
-        };
-    }
+        case actions.UPDATE_STORE_WISHLISTS:
+            return {
+                ...state,
+                allWishlists: action.wishlists,
+            };
 
-    if (action.type === actions.AUTHENTICATE) {
-        return {
-            ...state,
-            token: action.token,
-            isLoggedIn: true,
-            username: action.username,
-        };
-    }
+        case actions.AUTHENTICATE:
+            return {
+                ...state,
+                token: action.token,
+                isLoggedIn: true,
+                username: action.username,
+            };
 
-    if (action.type === actions.LOGOUT) {
-        return {
-            ...state,
-            token: '',
-            isLoggedIn: false,
-        };
-    }
+        case actions.LOGOUT:
+            return {
+                ...state,
+                token: '',
+                isLoggedIn: false,
+                allWishlists: [],
+            };
 
-    if (action.type === actions.TRIGGER_UPDATE_ACTION) {
-        return {
-            ...state,
-            editWishlistId: action.id,
-        };
+        case actions.TRIGGER_UPDATE_ACTION:
+            return {
+                ...state,
+                editWishlistId: action.id,
+            };
+
+        default:
+            return state;
     }
-    return state;
 };
 
 export default reducer;
