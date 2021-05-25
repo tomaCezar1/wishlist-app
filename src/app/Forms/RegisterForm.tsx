@@ -175,7 +175,7 @@ function RegisterForm({ toggleRegisterForm, register }: Props): JSX.Element {
     const classes = useStyles();
 
     return (
-        <div className="form-overlay">
+        <div className="overlay">
             <div className="form-container register-form">
                 <i className="form-delete-btn" onClick={toggleRegisterForm}>
                     <Close />

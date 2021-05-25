@@ -132,7 +132,7 @@ function LoginForm({ toggleLoginForm, login }: Props): JSX.Element {
     const classes = useStyles();
 
     return (
-        <div className="form-overlay">
+        <div className="overlay">
             <div className="form-container login-form">
                 <i className="form-delete-btn" id="login-close-btn" onClick={toggleLoginForm}>
                     <Close />

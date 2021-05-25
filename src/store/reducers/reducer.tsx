@@ -10,6 +10,8 @@ const initialState: AppState = {
     isLoggedIn: false,
     token: '',
     editWishlistId: null,
+    wishlistModalId: null,
+    wishlistModal: false,
 };
 
 const reducer = (state = initialState, action) => {
@@ -59,6 +61,19 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 editWishlistId: action.id,
+            };
+
+        case actions.TOGGLE_WISHLIST_MODAL:
+            return {
+                ...state,
+                wishlistModal: !state.wishlistModal,
+            };
+
+        case actions.TRIGGER_WISHLIST_MODAL:
+            return {
+                ...state,
+                wishlistModalId: action.id,
+                wishlistModal: true,
             };
 
         default:
