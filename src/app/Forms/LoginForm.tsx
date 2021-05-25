@@ -66,7 +66,8 @@ function LoginForm({ toggleLoginForm, login }: Props): JSX.Element {
 
     // Form verification
     const formVerification = () => {
-        const emailInvalid = !/^[^@]+@\w+(\.\w+)+\w$/.test(values.email);
+        //                        check for non-alphabet characters      or        white spaces
+        const emailInvalid = !/^[^@]+@\w+(\.\w+)+\w$/.test(values.email) || /\s/.test(values.email);
         const passwordInvalid = values.password.length < 1 || values.password.length < 8;
 
         // Email verification
@@ -82,6 +83,8 @@ function LoginForm({ toggleLoginForm, login }: Props): JSX.Element {
             setPasswordErrors({ error: true, description: 'Please enter a password' });
         } else if (values.password.length < 8) {
             setPasswordErrors({ error: true, description: 'The password is too short' });
+        } else if (/\s/.test(values.password)) {
+            setPasswordErrors({ error: true, description: 'The password contains white spaces' });
         } else setPasswordErrors({ error: false, description: ' ' });
 
         if (!emailInvalid && !passwordInvalid) {
@@ -96,18 +99,26 @@ function LoginForm({ toggleLoginForm, login }: Props): JSX.Element {
         };
 
         loginUser(loginData)
-            .then((res) => res.json())
             .then((res) => {
-                if (res.status === 401) {
-                    setEmailErrors({ error: true, description: ' ' });
-                    setPasswordErrors({ error: true, description: 'Wrong email or password' });
-                    return;
+                if (res.status === 401 || res.status === 400) {
+                    throw new Error('Incorrect credentials');
                 }
 
+                if (res.ok) {
+                    return res.json();
+                }
+            })
+            .then((res) => {
                 const token = res.jwt;
                 const username = res.fullName;
                 login(token, username);
                 toggleLoginForm();
+            })
+            .catch((err) => {
+                if (err.message === 'Incorrect credentials') {
+                    setEmailErrors({ error: true, description: ' ' });
+                    setPasswordErrors({ error: true, description: 'Wrong email or password' });
+                }
             });
     };
 
