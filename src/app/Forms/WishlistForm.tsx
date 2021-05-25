@@ -162,7 +162,7 @@ function WishlistForm({
     const classes = useStyles();
 
     return (
-        <div className="form-overlay">
+        <div className="overlay">
             <div className="form-container">
                 <i className="form-delete-btn" onClick={toggleForm}>
                     <Close />

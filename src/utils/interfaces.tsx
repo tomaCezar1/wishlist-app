@@ -7,6 +7,8 @@ export interface AppState {
     isLoggedIn: boolean;
     token: string;
     editWishlistId: number;
+    wishlistModal: boolean;
+    wishlistModalId: number;
 }
 
 export interface PostWishlistData {

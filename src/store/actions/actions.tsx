@@ -68,3 +68,16 @@ export const updateWishlist = (id: number, data: PostWishlistData) => {
         data,
     };
 };
+
+export const toggleWishlistModal = () => {
+    return {
+        type: actions.TOGGLE_WISHLIST_MODAL,
+    };
+};
+
+export const triggerWishlistModal = (id: number) => {
+    return {
+        type: actions.TRIGGER_WISHLIST_MODAL,
+        id,
+    };
+};
