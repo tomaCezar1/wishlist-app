@@ -53,7 +53,7 @@ function Wishlistcard(props: Props): JSX.Element {
             </div>
             <div className="button-container">
                 <button className="card-btn primary-btn" onClick={() => triggerWishlistModal(id)}>
-                    Add
+                    Add items
                 </button>
                 <button className="card-btn grey-btn" onClick={handleEdit}>
                     Edit
