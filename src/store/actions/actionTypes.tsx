@@ -8,7 +8,7 @@ export const SHOW_WISHLIST_FORM = 'SHOW_WISHLIST_FORM';
 export const SHOW_REGISTER_FORM = 'SHOW_REGISTER_FORM';
 export const SHOW_LOGIN_FORM = 'SHOW_LOGIN_FORM';
 
-export const AUTHENTICATE = 'AUTHENTICATE';
+export const LOGIN = 'LOGIN';
 export const LOGOUT = 'LOGOUT';
 
 export const TRIGGER_UPDATE_ACTION = 'TRIGGER_UPDATE_ACTION';

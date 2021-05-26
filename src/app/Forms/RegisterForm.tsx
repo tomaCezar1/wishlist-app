@@ -3,23 +3,23 @@ import React, { useState } from 'react';
 
 import * as actions from '../../store/actions/actions';
 import { RegisterCredentials } from '../../utils/interfaces';
+import { registerUser } from '../../utils/httpRequests';
 
 import Close from '@material-ui/icons/Close';
 import TextField from '@material-ui/core/TextField';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import InputAdornment from '@material-ui/core/InputAdornment';
-import IconButton from '@material-ui/core/IconButton';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import { makeStyles } from '@material-ui/core/styles';
-import { registerUser } from '../../utils/httpRequests';
+import IconButton from '@material-ui/core/IconButton';
 
 interface Props {
     toggleRegisterForm: () => void;
-    register: (token: string, name: string) => void;
+    handleToast: (email: string) => void;
 }
 
 interface State {
@@ -35,7 +35,7 @@ interface Errors {
     description: string;
 }
 
-function RegisterForm({ toggleRegisterForm, register }: Props): JSX.Element {
+function RegisterForm({ toggleRegisterForm, handleToast }: Props): JSX.Element {
     // State
     const [values, setValues] = useState<State>({
         name: '',
@@ -158,9 +158,7 @@ function RegisterForm({ toggleRegisterForm, register }: Props): JSX.Element {
                     });
                     return;
                 }
-                const token = res.jwt;
-                const name = res.fullName;
-                register(token, name);
+                handleToast(values.email);
                 toggleRegisterForm();
             });
     };
@@ -282,7 +280,6 @@ function RegisterForm({ toggleRegisterForm, register }: Props): JSX.Element {
 const mapDispatchToProps = (dispatch) => {
     return {
         toggleRegisterForm: () => dispatch(actions.showRegisterForm()),
-        register: (token: string, name: string) => dispatch(actions.authenticate(token, name)),
     };
 };
 

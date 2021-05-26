@@ -195,7 +195,7 @@ function LoginForm({ toggleLoginForm, login }: Props): JSX.Element {
 const mapDispatchToProps = (dispatch) => {
     return {
         toggleLoginForm: () => dispatch(actions.showLoginForm()),
-        login: (token: string, username: string) => dispatch(actions.authenticate(token, username)),
+        login: (token: string, username: string) => dispatch(actions.login(token, username)),
     };
 };
 

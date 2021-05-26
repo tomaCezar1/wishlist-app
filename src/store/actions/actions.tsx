@@ -1,10 +1,10 @@
 import { PostWishlistData } from '../../utils/interfaces';
 import * as actions from './actionTypes';
 
-export const authenticate = (token: string, username: string) => {
+export const login = (token: string, username: string) => {
     return {
-        type: actions.AUTHENTICATE,
-        token: token,
+        type: actions.LOGIN,
+        token,
         username,
     };
 };
