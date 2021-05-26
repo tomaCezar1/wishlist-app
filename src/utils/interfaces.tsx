@@ -3,6 +3,7 @@ export interface AppState {
     showWishlistForm: boolean;
     showRegisterForm: boolean;
     showLoginForm: boolean;
+    showItemForm: boolean;
     allWishlists: { id: number; title: string; wishListDate: string }[];
     isLoggedIn: boolean;
     token: string;

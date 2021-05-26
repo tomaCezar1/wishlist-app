@@ -81,3 +81,9 @@ export const triggerWishlistModal = (id: number) => {
         id,
     };
 };
+
+export const toggleItemForm = () => {
+    return {
+        type: actions.TOGGLE_ITEM_FORM,
+    };
+};

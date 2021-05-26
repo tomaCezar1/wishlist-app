@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 
 import Navbar from '../Navbar/NavBar';
 import Dashboard from '../Dashboard/Dashboard';
@@ -16,6 +16,7 @@ import * as actions from '../../store/actions/actions';
 import IconButton from '@material-ui/core/IconButton';
 import Snackbar from '@material-ui/core/Snackbar';
 import CloseIcon from '@material-ui/icons/Close';
+import ItemForm from '../Forms/ItemForm';
 
 interface Props {
     isLoggedIn: boolean;
@@ -46,6 +47,8 @@ function MainComponent(props: Props): JSX.Element {
     } = props;
 
     const [wishlists, setWishlists] = useState([]);
+
+    const showItemForm = useSelector((state: AppState) => state.showItemForm);
 
     const fetchWishlists = async () => {
         const res = await getWishlists(token);
@@ -95,6 +98,7 @@ function MainComponent(props: Props): JSX.Element {
                         {showWishlistForm ? (
                             <WishlistForm update={!editWishlistId ? false : true} />
                         ) : null}
+                        {showItemForm ? <ItemForm /> : null}
                     </>
                 ) : (
                     <>
@@ -111,6 +115,7 @@ function MainComponent(props: Props): JSX.Element {
                         horizontal: 'center',
                     }}
                     open={emailToast.open}
+                    id="snackbar-email-confirmation"
                     autoHideDuration={8000}
                     onClose={handleClose}
                     message={emailToast.message}
