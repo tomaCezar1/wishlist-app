@@ -1,16 +1,10 @@
 import { useEffect, useState } from 'react';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import Close from '@material-ui/icons/Close';
 import * as actions from '../../store/actions/actions';
 import { AppState } from '../../utils/interfaces';
 import { getWishlistById } from '../../utils/httpRequests';
-
-interface Props {
-    token: string;
-    wishlistId: number;
-    toggleWishlistModal: () => void;
-}
 
 interface Wishlist {
     id: number;
@@ -21,8 +15,13 @@ interface Wishlist {
     wishlistDescription: string;
 }
 
-function WishlistDashboard({ token, wishlistId, toggleWishlistModal }: Props) {
+function WishlistDashboard() {
+    const dispatch = useDispatch();
+
     const [wishlist, setWishlist] = useState<Wishlist>();
+
+    const wishlistId = useSelector((state: AppState) => state.wishlistModalId);
+    const token = useSelector((state: AppState) => state.token);
 
     useEffect(() => {
         getWishlistById(token, wishlistId)
@@ -34,8 +33,13 @@ function WishlistDashboard({ token, wishlistId, toggleWishlistModal }: Props) {
         <div className="overlay wishlist-dashboard-container">
             <section className="wishlist-dashboard">
                 <h1 className="wishlist-title">{wishlist?.title}</h1>
-                <button className="primary-btn">Add Items</button>
-                <i className="dashboard-delete-btn" onClick={toggleWishlistModal}>
+                <button className="primary-btn" onClick={() => dispatch(actions.toggleItemForm())}>
+                    Add Item
+                </button>
+                <i
+                    className="dashboard-delete-btn"
+                    onClick={() => dispatch(actions.toggleWishlistModal())}
+                >
                     <Close />
                 </i>
             </section>
@@ -43,17 +47,4 @@ function WishlistDashboard({ token, wishlistId, toggleWishlistModal }: Props) {
     );
 }
 
-const mapStateToProps = (state: AppState) => {
-    return {
-        wishlistId: state.wishlistModalId,
-        token: state.token,
-    };
-};
-
-const mapDisptachToProps = (dispatch) => {
-    return {
-        toggleWishlistModal: () => dispatch(actions.toggleWishlistModal()),
-    };
-};
-
-export default connect(mapStateToProps, mapDisptachToProps)(WishlistDashboard);
+export default WishlistDashboard;

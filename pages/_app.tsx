@@ -1,10 +1,11 @@
 import { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Head from 'next/head';
-
 import { Provider } from 'react-redux';
 import { createStore, applyMiddleware } from 'redux';
 import createSagaMiddleware from 'redux-saga';
+
+import Home from './index';
 import reducer from '../src/store/reducers/reducer';
 import watchSagas from '../src/store/sagas/sagas';
 
@@ -12,8 +13,6 @@ import { ThemeProvider } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import theme from '../src/styles/Theme/theme';
 import '../src/styles/globals.scss';
-
-import Home from './index';
 
 function MyApp(props) {
     const { Component, pageProps } = props;
@@ -31,9 +30,13 @@ function MyApp(props) {
     const store = createStore(reducer, applyMiddleware(sagaMiddleware));
     sagaMiddleware.run(watchSagas);
 
-    // Routing
+    // Authenticaton
     const storeState = store.getState();
     const loginState = storeState.isLoggedIn;
+
+    store.subscribe(() => {
+        // console.log(store.getState());
+    });
 
     const ComponentToRender = loginState ? Component : Home;
 

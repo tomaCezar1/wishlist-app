@@ -6,6 +6,7 @@ const initialState: AppState = {
     showWishlistForm: false,
     showRegisterForm: false,
     showLoginForm: false,
+    showItemForm: false,
     allWishlists: [],
     isLoggedIn: false,
     token: '',
@@ -14,7 +15,7 @@ const initialState: AppState = {
     wishlistModal: false,
 };
 
-const reducer = (state = initialState, action) => {
+const reducer = (state: AppState = initialState, action) => {
     switch (action.type) {
         case actions.SHOW_WISHLIST_FORM:
             return {
@@ -74,6 +75,12 @@ const reducer = (state = initialState, action) => {
                 ...state,
                 wishlistModalId: action.id,
                 wishlistModal: true,
+            };
+
+        case actions.TOGGLE_ITEM_FORM:
+            return {
+                ...state,
+                showItemForm: !state.showItemForm,
             };
 
         default:
