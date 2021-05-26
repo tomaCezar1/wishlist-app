@@ -49,7 +49,7 @@ function* watchSagas() {
     yield all([
         takeLatest(actions.DELETE_WISHLIST, deleteWishlistSaga),
         takeLatest(actions.CREATE_WISHLIST, createWishlistSaga),
-        takeLatest(actions.AUTHENTICATE, getWishlistsSaga),
+        takeLatest(actions.LOGIN, getWishlistsSaga),
         takeLatest(actions.UPDATE_WISHLIST, updateWishlistSaga),
     ]);
 }

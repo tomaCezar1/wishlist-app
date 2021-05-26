@@ -13,6 +13,10 @@ import { getWishlists } from '../../utils/httpRequests';
 import { AppState } from '../../utils/interfaces';
 import * as actions from '../../store/actions/actions';
 
+import IconButton from '@material-ui/core/IconButton';
+import Snackbar from '@material-ui/core/Snackbar';
+import CloseIcon from '@material-ui/icons/Close';
+
 interface Props {
     isLoggedIn: boolean;
     updateInitialWishlists: (data) => void;
@@ -22,6 +26,11 @@ interface Props {
     showLoginForm: boolean;
     wishlistsFromStore: { id: number; title: string; wishListDate: string }[];
     editWishlistId: number;
+}
+
+interface ToastState {
+    open: boolean;
+    message: string;
 }
 
 function MainComponent(props: Props): JSX.Element {
@@ -57,6 +66,23 @@ function MainComponent(props: Props): JSX.Element {
         setWishlists(wishlistsFromStore);
     }, [wishlistsFromStore]);
 
+    // Toast Notification State & Handlers
+    const [emailToast, setEmailToast] = useState<ToastState>({
+        open: false,
+        message: '',
+    });
+
+    const handleToast = (email: string) => {
+        setEmailToast({
+            open: true,
+            message: `Please confirm the email sent to : ${email}`,
+        });
+    };
+
+    const handleClose = () => {
+        setEmailToast({ open: false, message: '' });
+    };
+
     return (
         <>
             <div className="page-container">
@@ -73,11 +99,32 @@ function MainComponent(props: Props): JSX.Element {
                 ) : (
                     <>
                         <LandingPage />
-                        {showRegisterForm ? <RegisterForm /> : null}
+                        {showRegisterForm ? <RegisterForm handleToast={handleToast} /> : null}
                         {showLoginForm ? <LoginForm /> : null}
                     </>
                 )}
                 <Footer />
+
+                <Snackbar
+                    anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'center',
+                    }}
+                    open={emailToast.open}
+                    autoHideDuration={8000}
+                    onClose={handleClose}
+                    message={emailToast.message}
+                    action={
+                        <IconButton
+                            size="small"
+                            aria-label="close"
+                            color="inherit"
+                            onClick={handleClose}
+                        >
+                            <CloseIcon fontSize="small" />
+                        </IconButton>
+                    }
+                />
             </div>
         </>
     );

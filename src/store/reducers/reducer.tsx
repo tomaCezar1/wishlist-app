@@ -41,7 +41,7 @@ const reducer = (state = initialState, action) => {
                 allWishlists: action.wishlists,
             };
 
-        case actions.AUTHENTICATE:
+        case actions.LOGIN:
             return {
                 ...state,
                 token: action.token,
