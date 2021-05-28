@@ -66,7 +66,7 @@ function MainComponent(props: Props): JSX.Element {
     }, []);
 
     useEffect(() => {
-        setWishlists(wishlistsFromStore);
+        setWishlists(wishlistsFromStore.wishlists);
     }, [wishlistsFromStore]);
 
     // Toast Notification State & Handlers
@@ -149,9 +149,7 @@ const mapStateToProps = (state: AppState) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        updateInitialWishlists: (
-            wishlists: { id: number; title: string; wishListDate: string }[]
-        ) => {
+        updateInitialWishlists: (wishlists) => {
             dispatch(actions.updateStoreWishlists(wishlists));
         },
     };

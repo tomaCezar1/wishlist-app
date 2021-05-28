@@ -13,7 +13,7 @@ function Dashboard({ wishlists, wishlistModal }: Props): JSX.Element {
     return (
         <section className="dashboard-container">
             {!wishlistModal ? (
-                wishlists.map((wishlist) => {
+                wishlists?.map((wishlist) => {
                     let date: string;
                     if (wishlist.wishListDate) {
                         date = wishlist?.wishListDate.split('T')[0];

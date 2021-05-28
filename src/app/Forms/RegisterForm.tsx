@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import * as actions from '../../store/actions/actions';
 import { RegisterCredentials } from '../../utils/interfaces';
 import { registerUser } from '../../utils/httpRequests';
+import { Errors } from '../../utils/interfaces';
 
 import Close from '@material-ui/icons/Close';
 import TextField from '@material-ui/core/TextField';
@@ -28,11 +29,6 @@ interface State {
     password: string;
     confirmPassword: string;
     showPassword: boolean;
-}
-
-interface Errors {
-    error: boolean;
-    description: string;
 }
 
 function RegisterForm({ toggleRegisterForm, handleToast }: Props): JSX.Element {
