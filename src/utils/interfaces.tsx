@@ -4,12 +4,22 @@ export interface AppState {
     showRegisterForm: boolean;
     showLoginForm: boolean;
     showItemForm: boolean;
-    allWishlists: { id: number; title: string; wishListDate: string }[];
+    allWishlists: WishlistData;
     isLoggedIn: boolean;
     token: string;
     editWishlistId: number;
     wishlistModal: boolean;
     wishlistModalId: number;
+}
+
+export interface WishlistData {
+    wishlists: Wishlists[];
+}
+
+export interface Wishlists {
+    id: number;
+    title: string;
+    wishListDate: string;
 }
 
 export interface PostWishlistData {

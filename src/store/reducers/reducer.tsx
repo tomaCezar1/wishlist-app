@@ -7,7 +7,7 @@ const initialState: AppState = {
     showRegisterForm: false,
     showLoginForm: false,
     showItemForm: false,
-    allWishlists: [],
+    allWishlists: { wishlists: [] },
     isLoggedIn: false,
     token: '',
     editWishlistId: null,
