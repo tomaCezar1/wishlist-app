@@ -1,4 +1,4 @@
-import { PostWishlistData, RegisterCredentials, LoginCredentials } from './interfaces';
+import { PostWishlistData, RegisterCredentials, LoginCredentials, ItemData } from './interfaces';
 
 // export const url = 'https://wishlist-service-dev.herokuapp.com/api';
 export const url = 'https://wishlist-service-qa.herokuapp.com/api';
@@ -71,4 +71,15 @@ export function updateWishlist(token: string, id: number, data: PostWishlistData
         },
         body: JSON.stringify(data),
     }).then((res) => res.json());
+}
+
+export function createItem(token: string, id: number, data: ItemData) {
+    return fetch(`${url}/wishlists/${id}/items`, {
+        method: 'POST',
+        headers: {
+            'Content-type': 'application/json',
+            Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(data),
+    });
 }
