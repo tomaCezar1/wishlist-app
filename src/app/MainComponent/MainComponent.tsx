@@ -10,7 +10,7 @@ import RegisterForm from '../Forms/RegisterForm';
 import LoginForm from '../Forms/LoginForm';
 
 import { getWishlists } from '../../utils/httpRequests';
-import { AppState } from '../../utils/interfaces';
+import { AppState, WishlistData } from '../../utils/interfaces';
 import * as actions from '../../store/actions/actions';
 
 import IconButton from '@material-ui/core/IconButton';
@@ -25,7 +25,7 @@ interface Props {
     showWishlistForm: boolean;
     showRegisterForm: boolean;
     showLoginForm: boolean;
-    wishlistsFromStore: { id: number; title: string; wishListDate: string }[];
+    wishlistsFromStore: WishlistData;
     editWishlistId: number;
 }
 
