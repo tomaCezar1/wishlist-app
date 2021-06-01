@@ -32,7 +32,7 @@ export interface PostWishlistData {
 
 export interface ItemData {
     itemName: string;
-    link: string;
+    itemLink: string;
     price: string;
     currency: string;
     description: string;
@@ -54,4 +54,14 @@ export interface LoginCredentials {
 export interface Errors {
     error: boolean;
     description: string;
+}
+
+export interface WishlistItems {
+    id: number;
+    itemName: string;
+    itemLink: string;
+    price: string;
+    currency: string;
+    itemDescription: string;
+    priority: string;
 }

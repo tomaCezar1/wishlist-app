@@ -101,6 +101,7 @@
     border: none;
     background-color: $greyLight;
     color: $lightBlue;
+
     &:hover {
         background-color: $primary;
         color: $white;
@@ -142,4 +143,8 @@
 .dialog-btn {
     transition: all 0.3s ease-in-out !important;
     font-weight: $medium !important;
+}
+
+.card-title {
+    text-transform: capitalize;
 }

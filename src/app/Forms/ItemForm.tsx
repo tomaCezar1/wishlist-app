@@ -10,7 +10,11 @@ import MenuItem from '@material-ui/core/MenuItem';
 import { makeStyles } from '@material-ui/core/styles';
 import { createItem } from '../../utils/httpRequests';
 
-function ItemForm() {
+interface Props {
+    updateItems: () => void;
+}
+
+function ItemForm({ updateItems }: Props) {
     const wishlistId = useSelector((state: AppState) => state.wishlistModalId);
     const token = useSelector((state: AppState) => state.token);
     const dispatch = useDispatch();
@@ -65,18 +69,19 @@ function ItemForm() {
     };
 
     const itemRequest = () => {
+        const trimmedItemName = itemName.trim();
         const trimmedLink = link.trim();
         const trimmedDescription = description.trim();
 
         const itemData: ItemData = {
-            itemName,
-            link: trimmedLink,
+            itemName: trimmedItemName,
+            itemLink: trimmedLink,
             price,
             currency,
             description: trimmedDescription,
             priority,
         };
-        createItem(token, wishlistId, itemData);
+        createItem(token, wishlistId, itemData).then(() => updateItems());
     };
 
     const itemFormVerification = () => {
@@ -151,7 +156,7 @@ function ItemForm() {
                         onChange={priceHandler}
                         onBlur={onBlurPriceHandler}
                         className={classes.input}
-                        InputProps={{ inputProps: { min: 0, max: 10 } }}
+                        InputProps={{ inputProps: { min: 0, max: 100000 } }}
                         InputLabelProps={{
                             shrink: true,
                         }}

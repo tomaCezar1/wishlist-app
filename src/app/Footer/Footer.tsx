@@ -3,7 +3,7 @@ function Footer(): JSX.Element {
 
     return (
         <footer className="footer">
-            <p>Copyright &copy; {date} Wishlist Dashboard. All rights reserved</p>
+            <p>Copyright &copy; {date} Wishlist Dashboard 2. All rights reserved</p>
         </footer>
     );
 }

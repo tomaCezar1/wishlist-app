@@ -52,3 +52,13 @@ button {
         font-weight: $regular;
     }
 }
+
+.red-btn {
+    background-color: $red;
+    color: $white;
+    border: none;
+
+    &:hover {
+        background-color: rgba(255, 0, 0, 0.8);
+    }
+}
