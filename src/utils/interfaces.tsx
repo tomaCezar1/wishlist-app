@@ -35,7 +35,7 @@ export interface ItemData {
     itemLink: string;
     price: string;
     currency: string;
-    description: string;
+    itemDescription: string;
     priority: string;
 }
 

@@ -93,3 +93,23 @@ export function deleteItem(token: string, wishlistId: number, itemId: number) {
         },
     }).then((res) => res.json());
 }
+
+export function getItemById(token: string, wishlistId: number, itemId: number) {
+    return fetch(`${url}/wishlists/${wishlistId}/items/${itemId}`, {
+        method: 'GET',
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    }).then((res) => res.json());
+}
+
+export function updateItem(token: string, wishlistId: number, itemId: number, data: ItemData) {
+    return fetch(`${url}/wishlists/${wishlistId}/items/${itemId}`, {
+        method: 'PUT',
+        headers: {
+            'Content-type': 'application/json',
+            Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(data),
+    }).then((res) => res.json());
+}
