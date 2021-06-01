@@ -83,3 +83,13 @@ export function createItem(token: string, id: number, data: ItemData) {
         body: JSON.stringify(data),
     });
 }
+
+export function deleteItem(token: string, wishlistId: number, itemId: number) {
+    return fetch(`${url}/wishlists/${wishlistId}/items/${itemId}`, {
+        method: 'DELETE',
+        headers: {
+            'Content-type': 'application/json',
+            Authorization: `Bearer ${token}`,
+        },
+    }).then((res) => res.json());
+}

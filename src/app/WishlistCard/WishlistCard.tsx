@@ -45,7 +45,7 @@ function Wishlistcard(props: Props): JSX.Element {
     return (
         <div className="card">
             <div className="card-top">
-                <h1>{title}</h1>
+                <h1 className="card-title">{title}</h1>
                 <div className="card-time">
                     <Time />
                     <h2>{date}</h2>
