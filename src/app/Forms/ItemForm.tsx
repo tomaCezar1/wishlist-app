@@ -48,7 +48,7 @@ function ItemForm({ updateItems, updateForm = false, itemId = null, cancelUpdate
 
     const priceHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
         const positiveValue = Math.abs(parseFloat(event.target.value));
-        const stringifiedNumber = String(positiveValue);
+        const stringifiedNumber = String(positiveValue).slice(0, 7);
         setPrice(stringifiedNumber);
     };
 
@@ -104,10 +104,18 @@ function ItemForm({ updateItems, updateForm = false, itemId = null, cancelUpdate
     };
 
     const itemFormVerification = () => {
-        const itemValid = !!itemName.length && !!itemName.trim().length;
+        const itemValid =
+            !!itemName.length && !!itemName.trim().length && /^[\sA-Za-z]*$/.test(itemName);
 
         if (!itemValid) {
             setItemErrors({ error: true, description: 'Please enter the item name' });
+        }
+
+        if (!/^[\sA-Za-z]*$/.test(itemName)) {
+            setItemErrors({
+                error: true,
+                description: 'Symbols and numbers are not valid',
+            });
         }
 
         if (itemValid && !updateForm) {
@@ -183,11 +191,9 @@ function ItemForm({ updateItems, updateForm = false, itemId = null, cancelUpdate
                         label="Price"
                         id="item-price"
                         type="number"
-                        inputProps={{ maxLength: 10 }}
                         onChange={priceHandler}
                         onBlur={onBlurPriceHandler}
                         className={classes.input}
-                        InputProps={{ inputProps: { min: 0, max: 100000 } }}
                         InputLabelProps={{
                             shrink: true,
                         }}
@@ -218,7 +224,7 @@ function ItemForm({ updateItems, updateForm = false, itemId = null, cancelUpdate
                         className={classes.input}
                         variant="outlined"
                         rows={4}
-                        inputProps={{ maxLength: 400 }}
+                        inputProps={{ maxLength: 50 }}
                         value={description}
                         onChange={descriptionHandler}
                         InputLabelProps={{

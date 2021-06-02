@@ -55,6 +55,10 @@
 .wishlist-title {
     font-size: 36px;
     text-transform: capitalize;
+    max-width: 270px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
 
 .items-table {
@@ -127,4 +131,43 @@
 
 .MuiPaper-elevation8 {
     box-shadow: rgba(0, 0, 0, 0.16) 0px 5px 10px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px !important;
+}
+
+.view-btn {
+    padding: 10px 24px !important;
+}
+
+.wishlist-info {
+    display: flex;
+    justify-content: space-between;
+
+    .wishlist-details {
+        display: flex;
+        justify-content: space-between;
+        margin-right: 30px;
+
+        .wishlist-details-box {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-left: 40px;
+
+            .wishlist-details-text {
+                margin-left: 8px;
+                text-transform: capitalize;
+            }
+
+            .wishlist-details-desc {
+                margin-left: 8px;
+                max-width: 330px;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                overflow: hidden;
+            }
+
+            .wishlist-details-date {
+                margin-left: 8px;
+            }
+        }
+    }
 }

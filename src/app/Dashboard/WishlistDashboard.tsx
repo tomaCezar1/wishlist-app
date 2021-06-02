@@ -2,16 +2,20 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import Close from '@material-ui/icons/Close';
-import Popover from '@material-ui/core/Popover';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Button from '@material-ui/core/Button';
+import TodayIcon from '@material-ui/icons/Today';
+import CommentIcon from '@material-ui/icons/Comment';
+import DashboardIcon from '@material-ui/icons/Dashboard';
+import PeopleAltIcon from '@material-ui/icons/PeopleAlt';
 
 import { AppState, WishlistItems } from '../../utils/interfaces';
 import { getWishlistById, deleteItem } from '../../utils/httpRequests';
 import * as actions from '../../store/actions/actions';
 import ItemForm from '../Forms/ItemForm';
+import ItemDetailsForm from '../Forms/ItemDetailsForm';
 
 interface Wishlist {
     id: number;
@@ -29,13 +33,12 @@ function WishlistDashboard() {
     const token = useSelector((state: AppState) => state.token);
     const showItemForm = useSelector((state: AppState) => state.showItemForm);
 
-    const [wishlist, setWishlist] = useState<Wishlist>();
+    const [wishlist, setWishlist] = useState<Wishlist | null>(null);
     const [wishlistItems, setWishlistItems] = useState<WishlistItems[]>([]);
-    const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-    const [link, setLink] = useState<string | null>(null);
     const [dialog, setDialog] = useState<boolean>(false);
     const [itemId, setItemId] = useState<number | null>(null);
     const [updateForm, setUpdateForm] = useState<boolean>(false);
+    const [readOnlyForm, setReadOnlyForm] = useState<boolean>(false);
 
     const toggleDialog = (id: number = null) => {
         setItemId(id);
@@ -69,21 +72,18 @@ function WishlistDashboard() {
         dispatch(actions.toggleItemForm());
     };
 
+    const triggerReadOnlyForm = (itemId: number) => {
+        setItemId(itemId);
+        setReadOnlyForm(true);
+    };
+
+    const cancelReadOnlyFormState = () => {
+        setReadOnlyForm(false);
+    };
+
     const cancelUpdateState = () => {
         setUpdateForm(false);
     };
-
-    // Popover logic
-    const handleClick = (event: React.MouseEvent<HTMLButtonElement>, link: string) => {
-        setAnchorEl(event.currentTarget);
-        setLink(link);
-    };
-
-    const handleClose = () => {
-        setAnchorEl(null);
-    };
-
-    const open = Boolean(anchorEl);
 
     return (
         <>
@@ -96,7 +96,41 @@ function WishlistDashboard() {
                     >
                         <Close />
                     </i>
-                    <h1 className="wishlist-title">{wishlist?.title}</h1>
+                    {wishlist ? (
+                        <div className="wishlist-info">
+                            <h1 className="wishlist-title">{wishlist?.title}</h1>
+                            <div className="wishlist-details">
+                                <div className="wishlist-details-box">
+                                    <TodayIcon />
+                                    <p className="wishlist-details-date">
+                                        {wishlist?.wishListDate.split('T')[0]}
+                                    </p>
+                                </div>
+                                <div className="wishlist-details-box">
+                                    <DashboardIcon />
+                                    <p className="wishlist-details-text">
+                                        {wishlist?.eventType.toLowerCase()}
+                                    </p>
+                                </div>
+
+                                {wishlist?.wishlistDescription ? (
+                                    <div className="wishlist-details-box">
+                                        <CommentIcon />
+                                        <p className="wishlist-details-desc">
+                                            {wishlist?.wishlistDescription}
+                                        </p>
+                                    </div>
+                                ) : null}
+
+                                <div className="wishlist-details-box">
+                                    <PeopleAltIcon />
+                                    <p className="wishlist-details-text">
+                                        {wishlist?.privacyType.toLowerCase()}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    ) : null}
                     <table className="items-table">
                         <tbody>
                             {wishlistItems.map((item) => {
@@ -112,32 +146,25 @@ function WishlistDashboard() {
                                         </td>
                                         <td>
                                             {item.itemLink ? (
-                                                <button
-                                                    className="card-btn grey-btn"
+                                                <a
+                                                    className="card-btn grey-btn view-btn"
                                                     id="view-link-btn"
-                                                    onClick={(e) => handleClick(e, item.itemLink)}
+                                                    target="_blank"
+                                                    rel="noreferrer"
+                                                    href={`https://www.${item.itemLink}`}
                                                 >
-                                                    View
-                                                </button>
+                                                    Link
+                                                </a>
                                             ) : null}
-                                            {item.itemLink ? (
-                                                <Popover
-                                                    id="item-link-popover"
-                                                    open={open}
-                                                    anchorEl={anchorEl}
-                                                    onClose={handleClose}
-                                                    anchorOrigin={{
-                                                        vertical: 'bottom',
-                                                        horizontal: 'center',
-                                                    }}
-                                                    transformOrigin={{
-                                                        vertical: 'top',
-                                                        horizontal: 'center',
-                                                    }}
-                                                >
-                                                    <p className="popover-text">{link}</p>
-                                                </Popover>
-                                            ) : null}
+                                        </td>
+                                        <td>
+                                            <button
+                                                className="card-btn grey-btn"
+                                                id="item-view-btn"
+                                                onClick={() => triggerReadOnlyForm(item.id)}
+                                            >
+                                                View
+                                            </button>
                                         </td>
                                         <td>
                                             <button
@@ -178,6 +205,13 @@ function WishlistDashboard() {
                     updateForm={updateForm}
                     itemId={itemId}
                     cancelUpdateState={cancelUpdateState}
+                />
+            ) : null}
+
+            {readOnlyForm ? (
+                <ItemDetailsForm
+                    itemId={itemId}
+                    cancelReadOnlyFormState={cancelReadOnlyFormState}
                 />
             ) : null}
 
