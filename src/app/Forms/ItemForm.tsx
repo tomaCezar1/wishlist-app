@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import * as actions from '../../store/actions/actions';
@@ -8,13 +8,16 @@ import TextField from '@material-ui/core/TextField';
 import Close from '@material-ui/icons/Close';
 import MenuItem from '@material-ui/core/MenuItem';
 import { makeStyles } from '@material-ui/core/styles';
-import { createItem } from '../../utils/httpRequests';
+import { createItem, getItemById, updateItem } from '../../utils/httpRequests';
 
 interface Props {
     updateItems: () => void;
+    updateForm: boolean;
+    itemId?: number;
+    cancelUpdateState: () => void;
 }
 
-function ItemForm({ updateItems }: Props) {
+function ItemForm({ updateItems, updateForm = false, itemId = null, cancelUpdateState }: Props) {
     const wishlistId = useSelector((state: AppState) => state.wishlistModalId);
     const token = useSelector((state: AppState) => state.token);
     const dispatch = useDispatch();
@@ -68,20 +71,36 @@ function ItemForm({ updateItems }: Props) {
         setPriority(event.target.value);
     };
 
-    const itemRequest = () => {
+    const createItemRequest = (update = false) => {
         const trimmedItemName = itemName.trim();
-        const trimmedLink = link.trim();
-        const trimmedDescription = description.trim();
+        const trimmedLink = link?.trim();
+        const trimmedDescription = description?.trim();
 
         const itemData: ItemData = {
             itemName: trimmedItemName,
             itemLink: trimmedLink,
             price,
             currency,
-            description: trimmedDescription,
+            itemDescription: trimmedDescription,
             priority,
         };
-        createItem(token, wishlistId, itemData).then(() => updateItems());
+
+        {
+            update
+                ? updateItem(token, wishlistId, itemId, itemData).then(() => updateItems())
+                : createItem(token, wishlistId, itemData).then(() => updateItems());
+        }
+    };
+
+    const getItemRequest = () => {
+        getItemById(token, wishlistId, itemId).then((res) => {
+            setCurrency(res.currency);
+            setDescription(res?.itemDescription);
+            setLink(res.itemLink);
+            setItemName(res.itemName);
+            setPrice(res.price);
+            setPriority(res.priority);
+        });
     };
 
     const itemFormVerification = () => {
@@ -91,10 +110,26 @@ function ItemForm({ updateItems }: Props) {
             setItemErrors({ error: true, description: 'Please enter the item name' });
         }
 
-        if (itemValid) {
-            itemRequest();
+        if (itemValid && !updateForm) {
+            createItemRequest();
             dispatch(actions.toggleItemForm());
         }
+
+        if (itemValid && updateForm) {
+            createItemRequest(updateForm);
+            dispatch(actions.toggleItemForm());
+        }
+    };
+
+    useEffect(() => {
+        {
+            updateForm ? getItemRequest() : null;
+        }
+    }, [updateForm]);
+
+    const closeUpdateForm = () => {
+        dispatch(actions.toggleItemForm());
+        cancelUpdateState();
     };
 
     // Styles
@@ -112,15 +147,11 @@ function ItemForm({ updateItems }: Props) {
     return (
         <div className="overlay">
             <div className="form-container item-form">
-                <i
-                    id="item-form-delete-btn"
-                    className="form-delete-btn"
-                    onClick={() => dispatch(actions.toggleItemForm())}
-                >
+                <i id="item-form-delete-btn" className="form-delete-btn" onClick={closeUpdateForm}>
                     <Close />
                 </i>
                 <form className="wishlist-form">
-                    <h1 className="form-title"> Create Item</h1>
+                    <h1 className="form-title">{updateForm ? 'Edit Item' : 'Create Item'}</h1>
                     <TextField
                         required
                         value={itemName}
@@ -218,7 +249,7 @@ function ItemForm({ updateItems }: Props) {
                     id="item-form-btn"
                     onClick={itemFormVerification}
                 >
-                    Add item
+                    {updateForm ? 'Update Item' : 'Add item'}
                 </button>
             </div>
         </div>

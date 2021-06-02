@@ -35,6 +35,7 @@ function WishlistDashboard() {
     const [link, setLink] = useState<string | null>(null);
     const [dialog, setDialog] = useState<boolean>(false);
     const [itemId, setItemId] = useState<number | null>(null);
+    const [updateForm, setUpdateForm] = useState<boolean>(false);
 
     const toggleDialog = (id: number = null) => {
         setItemId(id);
@@ -61,6 +62,16 @@ function WishlistDashboard() {
     useEffect(() => {
         updateItems();
     }, []);
+
+    const triggerEdit = (itemId: number) => {
+        setItemId(itemId);
+        setUpdateForm(true);
+        dispatch(actions.toggleItemForm());
+    };
+
+    const cancelUpdateState = () => {
+        setUpdateForm(false);
+    };
 
     // Popover logic
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>, link: string) => {
@@ -132,6 +143,7 @@ function WishlistDashboard() {
                                             <button
                                                 className="card-btn grey-btn"
                                                 id="item-edit-btn"
+                                                onClick={() => triggerEdit(item.id)}
                                             >
                                                 Edit
                                             </button>
@@ -159,7 +171,16 @@ function WishlistDashboard() {
                     </button>
                 </section>
             </div>
-            {showItemForm ? <ItemForm updateItems={updateItems} /> : null}
+
+            {showItemForm ? (
+                <ItemForm
+                    updateItems={updateItems}
+                    updateForm={updateForm}
+                    itemId={itemId}
+                    cancelUpdateState={cancelUpdateState}
+                />
+            ) : null}
+
             <Dialog
                 open={dialog}
                 onClose={() => toggleDialog()}
