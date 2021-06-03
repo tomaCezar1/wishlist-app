@@ -224,7 +224,7 @@ function ItemForm({ updateItems, updateForm = false, itemId = null, cancelUpdate
                         className={classes.input}
                         variant="outlined"
                         rows={4}
-                        inputProps={{ maxLength: 50 }}
+                        inputProps={{ maxLength: 250 }}
                         value={description}
                         onChange={descriptionHandler}
                         InputLabelProps={{
