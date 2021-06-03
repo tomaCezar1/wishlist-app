@@ -208,7 +208,7 @@ function WishlistForm({
                         className={classes.input}
                         variant="outlined"
                         rows={4}
-                        inputProps={{ maxLength: 1000 }}
+                        inputProps={{ maxLength: 250 }}
                         value={description}
                         onChange={handleDescriptionChange}
                         label="Description"

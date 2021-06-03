@@ -4,6 +4,7 @@ import Head from 'next/head';
 import { Provider } from 'react-redux';
 import { createStore, applyMiddleware } from 'redux';
 import createSagaMiddleware from 'redux-saga';
+import { useRouter } from 'next/router';
 
 import Home from './index';
 import reducer from '../src/store/reducers/reducer';
@@ -34,11 +35,9 @@ function MyApp(props) {
     const storeState = store.getState();
     const loginState = storeState.isLoggedIn;
 
-    store.subscribe(() => {
-        // console.log(store.getState());
-    });
+    const router = useRouter();
 
-    const ComponentToRender = loginState ? Component : Home;
+    const ComponentToRender = !loginState && router.pathname === '/' ? Home : Component;
 
     return (
         <>

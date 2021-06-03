@@ -99,35 +99,36 @@ function WishlistDashboard() {
                     {wishlist ? (
                         <div className="wishlist-info">
                             <h1 className="wishlist-title">{wishlist?.title}</h1>
-                            <div className="wishlist-details">
-                                <div className="wishlist-details-box">
-                                    <TodayIcon />
-                                    <p className="wishlist-details-date">
-                                        {wishlist?.wishListDate.split('T')[0]}
-                                    </p>
-                                </div>
-                                <div className="wishlist-details-box">
-                                    <DashboardIcon />
-                                    <p className="wishlist-details-text">
-                                        {wishlist?.eventType.toLowerCase()}
-                                    </p>
+                            <div className="wishlist-details-container">
+                                <div className="wishlist-details">
+                                    <div className="wishlist-details-box">
+                                        <TodayIcon />
+                                        <p className="wishlist-details-date">
+                                            {wishlist?.wishListDate.split('T')[0]}
+                                        </p>
+                                    </div>
+                                    <div className="wishlist-details-box">
+                                        <DashboardIcon />
+                                        <p className="wishlist-details-text">
+                                            {wishlist?.eventType.toLowerCase()}
+                                        </p>
+                                    </div>
+                                    <div className="wishlist-details-box">
+                                        <PeopleAltIcon />
+                                        <p className="wishlist-details-text">
+                                            {wishlist?.privacyType.toLowerCase()}
+                                        </p>
+                                    </div>
                                 </div>
 
                                 {wishlist?.wishlistDescription ? (
-                                    <div className="wishlist-details-box">
+                                    <div className="wishlist-details-box desc-box">
                                         <CommentIcon />
                                         <p className="wishlist-details-desc">
                                             {wishlist?.wishlistDescription}
                                         </p>
                                     </div>
                                 ) : null}
-
-                                <div className="wishlist-details-box">
-                                    <PeopleAltIcon />
-                                    <p className="wishlist-details-text">
-                                        {wishlist?.privacyType.toLowerCase()}
-                                    </p>
-                                </div>
                             </div>
                         </div>
                     ) : null}
@@ -151,7 +152,7 @@ function WishlistDashboard() {
                                                     id="view-link-btn"
                                                     target="_blank"
                                                     rel="noreferrer"
-                                                    href={`https://www.${item.itemLink}`}
+                                                    href={item.itemLink}
                                                 >
                                                     Link
                                                 </a>
